@@ -151,13 +151,13 @@ scjs.sframe <- scjs.sframe[order(scjs.sframe$la_code,
 # As the selection probability of some addresses is zero,
 # a warning message will be displayed when executing the code below.
 # This is to be expected and nothing to be concerned about.
-sample <- strata(data = scjs.sframe, 
+scjs.initial.totalsample <- strata(data = scjs.sframe, 
                 stratanames = c("la_code"), 
                 size = scjs.initial.samplesize$total_n, 
                 method = c("systematic"), 
                 pik = scjs.sframe$totalsize)
 
-scjs.initial.totalsample <- getdata(scjs.sframe, sample) %>% 
+scjs.initial.totalsample <- getdata(scjs.sframe, scjs.initial.totalsample) %>% 
   clean_names_modified()
 
 # Merge sampling frame and drawn sample and sort data frame
@@ -174,21 +174,27 @@ scjs.frameandmatchedsample <- scjs.sframe %>%
 write_rds(
   scjs.initial.totalsample, 
   paste0(scjs.path, 
-         "scjs.initial.totalsample.rds"),
+         "scjs.initial.totalsample.",
+         syear,
+         ".rds"),
   compress = "gz"
 )
 
 write_rds(
   scjs.initial.samplesize, 
   paste0(scjs.path,
-         "scjs.initial.samplesize.rds"),
+         "scjs.initial.samplesize.",
+         syear,
+         ".rds"),
   compress = "gz"
 )
 
 write_rds(
   scjs.frameandmatchedsample, 
   paste0(scjs.path,
-         "scjs.frameandmatchedsample.rds"),
+         "scjs.frameandmatchedsample.",
+         syear,
+         ".rds"),
   compress = "gz"
 )
 
