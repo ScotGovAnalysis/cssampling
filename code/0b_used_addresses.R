@@ -5,8 +5,8 @@
 # Written/run on - RStudio Desktop
 # Version of R - 4.2.2
 #
-# Description - Imports the cleaned postcode address file and 
-# removes previously sampled addresses.
+# Description - Imports all addresses sampled in the last four years 
+# and exports them in a single file.
 
 #########################################################################
 
