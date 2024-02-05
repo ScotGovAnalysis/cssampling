@@ -18,6 +18,7 @@ library(janitor)
 library(data.table)
 library(here)
 library(openxlsx)
+library(readxl)
 
 ### 2 - Load functions from functions folder of Rproject ----
 
