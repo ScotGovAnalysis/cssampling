@@ -56,6 +56,9 @@ nrow(shs.sframe)
 ### 4 - Sampling ---- 
 
 # Draw stratified systematic sample
+# As the selection probability of some addresses is zero,
+# a warning message will be displayed when executing the code below.
+# This is to be expected and nothing to be concerned about.
 shs.totalsample <- shs.sframe %>%
   sampling(sample_size = shs.samplesize)
 
