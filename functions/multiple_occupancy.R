@@ -106,10 +106,9 @@ multiple_occupancy <- function(sample_frame) {
       # addresses.
       # In the case of SHeS, the results are then multiplied by
       # clustersize.
-      totalsize = ifelse(
-        "shes_clustersize" %in% colnames(sample_frame),
-        multisize * (activeflag / pactive) * shes_clustersize,
-        multisize * (activeflag / pactive)),
+      totalsize = if (exists('shes_clustersize')) 
+        multisize * (activeflag / pactive) * shes_clustersize else
+        multisize * (activeflag / pactive),
       la_code = as.numeric(la_code))
   
   return(sframe)
