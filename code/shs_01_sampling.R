@@ -84,27 +84,45 @@ nrow(shs.mainsample)
 ### 6 - Household condition ---- 
 
 shs.contractorsample <- shs.mainsample %>%
+  
+  # Draw house condition sample
   sampling(sample_size = shs.samplesize$house_condition_n) %>%
+  
+  # Add flag for sampled addresses
   mutate(houseconditionflag = 1) %>%
+  
+  # Merge with main sample
   right_join(shs.mainsample) %>%
+  
+  # Replace NAs in houseconditionflag with 0
   mutate(houseconditionflag = replace_na(houseconditionflag, 0))
 
 nrow(shs.contractorsample)
 
-### 6 - Prepare for export ----
+### 7 - Prepare for export ----
 
 shs.contractor.export <- shs.contractorsample %>% prepare_for_export()
 
 ### 7 - Post-processing ---- 
 
+# generate streams 1:4
 streams1 <- stream_allocation(1, 4)
+
+# generate streams 5:12
 streams0 <- stream_allocation(5, 12)
 
+# add streams to contractor sample
 shs.contractor.export <- shs.contractor.export %>%
+  
+  # if an address is part of the house condition sample,
+  # assign streams 1:4
   mutate(stream = ifelse(houseconditionflag == 1,
                          rep_len(streams1$num, 
                                  length.out = nrow(.)),
                          0),
+         
+         # if an address is not part of the house condition sample,
+         # assign streams 5:12
          stream = ifelse(houseconditionflag == 0,
                          rep_len(streams0$num, 
                                  length.out = nrow(.)),
