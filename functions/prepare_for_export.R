@@ -14,7 +14,12 @@
 
 prepare_for_export <- function(df){
   df %>%
+    
+    # transform property column to character column to ensure that
+    # Excel doesn't convert flat addresses to dates;
     mutate(property = as.character(property)) %>%
+    
+    # select relevant variables
     select(any_of(c(
       "udprn", "organisation", "property", "street"," locality", 
       "town", "postcode", "print_address", "datazone", "dz11", 
@@ -22,6 +27,10 @@ prepare_for_export <- function(df){
       "la_code", "multisize", "simd20rank", "dz11_urbrur2020", 
       "council_tax_band",
       "houseconditionflag"))) %>%
+    
+    # sort data frame
+    # if the variable 'houseconditionflag' exists, use it as sorting variable
+    # otherwise, skip 'houseconditionflag'
     arrange(if("houseconditionflag" %in% names(df)){houseconditionflag},
             la_code, dz11_urbrur2020, simd20rank, 
             postcode, print_address)
