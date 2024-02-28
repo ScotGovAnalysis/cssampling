@@ -23,15 +23,16 @@ prepare_for_export <- function(df){
     select(any_of(c(
       "udprn", "organisation", "property", "street"," locality", 
       "town", "postcode", "print_address", "datazone", "dz11", 
-      "xcoord", "ycoord", "laa", 
-      "la_code", "multisize", "simd20rank", "dz11_urbrur2020", 
+      "xcoord", "ycoord", "health_board", "hb_code", "laa", 
+      "la_code", "cluster21", "multisize", "simd20rank", "dz11_urbrur2020", 
       "council_tax_band",
-      "houseconditionflag"))) %>%
+      "houseconditionflag", "sample_type", "core", "core_bio", "child_boost",
+      "hb_boost"))) %>%
     
     # sort data frame
     # if the variable 'houseconditionflag' exists, use it as sorting variable
     # otherwise, skip 'houseconditionflag'
-    arrange(if("houseconditionflag" %in% names(df)){houseconditionflag},
-            la_code, dz11_urbrur2020, simd20rank, 
-            postcode, print_address)
+  arrange(ifelse("houseconditionflag" %in% names(df), houseconditionflag, ""),
+          la_code, dz11_urbrur2020, simd20rank, 
+          postcode, print_address)
 }
