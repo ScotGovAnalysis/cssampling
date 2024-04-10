@@ -18,6 +18,17 @@
 
 source(here::here("code", "00_setup.R"))
 
+# Check if PAF script has been run with most recent PAF file
+# If it hasn't been run, run PAF script
+paf_list <- list.files(path = here("lookups"),
+                       pattern = "paf")
+if(!any(grepl(paf_v, paf_list))){
+  source(here::here("code", "0a_paf.R"))
+}
+
+# Run the used addresses script to identify all previously sampled addresses
+source(here::here("code", "0b_used_addresses.R"))
+
 ### 1 - Import files ---- 
 
 # Identify most recent used addresses file
@@ -65,12 +76,18 @@ nrow(shes.sframe)
 
 ### 5 - Sampling ---- 
 
+shes.control <- c("dz11_urbrur2020",
+                  "average_simd20_rank",
+                  "simd20rank",
+                  "postcode",
+                  "print_address")
+
 # Draw stratified systematic sample
-# As the selection probability of some addresses is zero,
-# a warning message will be displayed when executing the code below.
-# This is to be expected and nothing to be concerned about.
-shes.totalsample <- shes.sframe %>% 
-  sampling(sample_size = shes.samplesize)
+shes.totalsample <- shes.sframe %>%
+  sampling(stratum = "la_code",
+           sample_size = shes.samplesize$total_n,
+           prob = "totalsize",
+           control = shes.control)
 
 # Merge sampling frame and drawn sample and sort data frame
 shes.frameandmatchedsample <- shes.sframe %>% 
@@ -79,6 +96,8 @@ shes.frameandmatchedsample <- shes.sframe %>%
 ### 6 - Export sample  ----
 
 # Code to export sampled addresses into output folder
+# Current date is automatically added to file name to avoid 
+# overwriting existing files
 
 export_rds(shes.totalsample)
 

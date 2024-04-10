@@ -15,8 +15,18 @@
 
 # Run setup script which loads all required packages and functions and 
 # executes the config.R script.
-
 source(here::here("code", "00_setup.R"))
+
+# Check if PAF script has been run with most recent PAF file
+# If it hasn't been run, run PAF script
+paf_list <- list.files(path = here("lookups"),
+                       pattern = "paf")
+if(!any(grepl(paf_v, paf_list))){
+  source(here::here("code", "0a_paf.R"))
+}
+
+# Run the used addresses script to identify all previously sampled addresses
+source(here::here("code", "0b_used_addresses.R"))
 
 ### 1 - Import files ---- 
 
@@ -28,9 +38,10 @@ recent_usedaddresses <- most_recent_file(path = here("lookups"),
 usedaddresses <- read_rds(paste0(here("lookups"), "/", recent_usedaddresses))
 
 # Identify most recent cleaned PAF
-recent_paf <- most_recent_file(path = here("lookups"), pattern = "paf")
+recent_paf <- paf_list[grepl(paf_v, paf_list, 
+                              ignore.case = TRUE)]
 
-# Import cleaned paf
+# Import cleaned PAF
 clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
 
 # Import SIMD ranks for datazones
@@ -56,12 +67,20 @@ nrow(scjs.sframe)
 
 ### 4 - Sampling ---- 
 
+scjs.control <- c("dz11_urbrur2020",
+                  "simd20rank",
+                  "postcode",
+                  "print_address")
+
 # Draw stratified systematic sample
 # As the selection probability of some addresses is zero,
 # a warning message will be displayed when executing the code below.
 # This is to be expected and nothing to be concerned about.
 scjs.totalsample <- scjs.sframe %>%
-  sampling(sample_size = scjs.samplesize$total_n)
+  sampling(stratum = "la_code",
+           sample_size = scjs.samplesize$total_n,
+           prob = "totalsize",
+           control = scjs.control)
 
 # Merge sampling frame and drawn sample and sort data frame
 scjs.frameandmatchedsample <- scjs.sframe %>% 
@@ -70,11 +89,12 @@ scjs.frameandmatchedsample <- scjs.sframe %>%
 ### 5 - Draw reserve sample ---- 
 
 # Draw stratified systematic sample
-# As the selection probability of some addresses is zero,
-# a warning message will be displayed when executing the code below.
-# This is to be expected and nothing to be concerned about.
 scjs.reservesample <- scjs.totalsample %>% 
-  sampling(sample_size = scjs.samplesize$reserve_n)
+  sampling(stratum = "la_code",
+           sample_size = scjs.samplesize$reserve_n,
+           prob = rep(1/nrow(scjs.totalsample), 
+                      times = nrow(scjs.totalsample)),
+           control = scjs.control)
 
 # Remove reserve sample from contractor sample
 scjs.contractorsample <- anti_join(x = scjs.totalsample, 
@@ -101,6 +121,8 @@ scjs.contractor.export <- scjs.contractor.export %>% selected_mo()
 ### 5 - Export sample  ----
 
 # Code to export sampled addresses into output folder
+# Current date is automatically added to file name to avoid 
+# overwriting existing files
 
 export_rds(scjs.totalsample)
 

@@ -31,22 +31,19 @@ biomodsframe <- read.csv(biomod.path,
 
 biomod <- biomodsframe %>% filter(stream == shes.biomodstream)
 
-biomod  <- biomod[order(biomod$stream,
-                        biomod$health_board,
-                        biomod$local_authority,
-                        biomod$ur20,
-                        biomod$average_simd20_rank),]
-
 # Draw stratified systematic sample
-biomodsample <- strata(data = biomod,
-                       stratanames = c("stream"),
-                       size = biomodsamplesize, 
-                       method = c("systematic"), 
-                       pik = rep(1/nrow(biomod), 
-                                 times = nrow(biomod)))
 
-biomodsample <- getdata(biomod, biomodsample) %>% 
-  clean_names_modified()
+biomod.cotrol <- c("health_board",
+                   "local_authority",
+                   "ur20",
+                   "average_simd20_rank")
+
+biomodsample <- sampling(df = biomod,
+         stratum = "stream",
+         sample_size = biomodsamplesize,
+         prob = rep(1/nrow(biomod), 
+                    times = nrow(biomod)),
+         control = biomod.cotrol)
 
 
 biomod.frameandmatchedsample <- biomod %>% 
@@ -64,24 +61,12 @@ shes.samplesize <- shes.samplesize %>%
 shes.totalsample.modules <- shes.totalsample %>% 
   select(-c(prob, stratum, totalsize, activeflag, pactive))
 
-
-shes.totalsample.modules  <- shes.totalsample.modules[order(shes.totalsample.modules$la_code,
-                                                            shes.totalsample.modules$dz11_urbrur2020,
-                                                            shes.totalsample.modules$average_simd20_rank,
-                                                            shes.totalsample.modules$simd20rank,
-                                                            shes.totalsample.modules$postcode,
-                                                            shes.totalsample.modules$print_address),]
-
-# Draw stratified systematic sample
-shes.reservesample <- strata(data = shes.totalsample.modules,
-                             stratanames = c("la_code"),
-                             size = shes.samplesize$total_reserve, 
-                             method = c("systematic"), 
-                             pik = rep(1/nrow(shes.totalsample.modules), 
-                                       times = nrow(shes.totalsample.modules)))
-
-shes.reservesample <- getdata(shes.totalsample.modules, shes.reservesample) %>% 
-  clean_names_modified()
+shes.reservesample <- shes.totalsample.modules %>%
+  sampling(stratum = "la_code",
+           sample_size = shes.samplesize$total_reserve,
+           prob = rep(1/nrow(shes.totalsample.modules), 
+                      times = nrow(shes.totalsample.modules)),
+           control = shes.control)
 
 nrow(shes.reservesample)
 
@@ -105,23 +90,12 @@ child.sframe <- shes.contractorsample %>% filter(!la_code %in% c(235, 330, 360))
 child.samplesize <- shes.samplesize %>% filter(!shes_strata %in% c(235, 330, 360))
 
 # Select the child boost sample from the contractor sample
-child.sframe  <- child.sframe[order(child.sframe$la_code,
-                                    child.sframe$dz11_urbrur2020,
-                                    child.sframe$average_simd20_rank,
-                                    child.sframe$simd20rank,
-                                    child.sframe$postcode,
-                                    child.sframe$print_address),]
-
-# Draw stratified systematic sample
-child.mainsample <- strata(data = child.sframe,
-                           stratanames = c("la_code"),
-                           size = child.samplesize$child_n, 
-                           method = c("systematic"), 
-                           pik = rep(1/nrow(child.sframe), 
-                                     times = nrow(child.sframe)))
-
-child.mainsample <- getdata(child.sframe, child.mainsample) %>% 
-  clean_names_modified()
+child.mainsample  <- child.sframe %>%
+  sampling(stratum = "la_code",
+           sample_size = child.samplesize$child_n,
+           prob = rep(1/nrow(child.sframe), 
+                      times = nrow(child.sframe)),
+           control = shes.control)
 
 nrow(child.mainsample)
 
@@ -180,6 +154,10 @@ shes.full.contractorsample %>%
 shes.contractorsample.export <- prepare_for_export(shes.full.contractorsample)
 
 ### 8 - Export sample  ----
+
+# Code to export sampled addresses into output folder
+# Current date is automatically added to file name to avoid 
+# overwriting existing files
 
 export_rds(shes.full.contractorsample)
 

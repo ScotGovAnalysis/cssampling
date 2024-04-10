@@ -18,6 +18,17 @@
 
 source(here::here("code", "00_setup.R"))
 
+# Check if PAF script has been run with most recent PAF file
+# If it hasn't been run, run PAF script
+paf_list <- list.files(path = here("lookups"),
+                       pattern = "paf")
+if(!any(grepl(paf_v, paf_list))){
+  source(here::here("code", "0a_paf.R"))
+}
+
+# Run the used addresses script to identify all previously sampled addresses
+source(here::here("code", "0b_used_addresses.R"))
+
 ### 1 - Import files ---- 
 
 # Identify most recent used addresses file
@@ -28,7 +39,8 @@ recent_usedaddresses <- most_recent_file(path = here("lookups"),
 usedaddresses <- read_rds(paste0(here("lookups"), "/", recent_usedaddresses))
 
 # Identify most recent cleaned PAF
-recent_paf <- most_recent_file(path = here("lookups"), pattern = "paf")
+recent_paf <- paf_list[grepl(paf_v, paf_list, 
+                             ignore.case = TRUE)]
 
 # Import cleaned PAF
 clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
@@ -55,12 +67,20 @@ nrow(shs.sframe)
 
 ### 4 - Sampling ---- 
 
+shs.control <- c("dz11_urbrur2020",
+                  "simd20rank",
+                  "postcode",
+                  "print_address")
+
 # Draw stratified systematic sample
 # As the selection probability of some addresses is zero,
 # a warning message will be displayed when executing the code below.
 # This is to be expected and nothing to be concerned about.
 shs.totalsample <- shs.sframe %>%
-  sampling(sample_size = shs.samplesize$total_n)
+  sampling(stratum = "la_code",
+           sample_size = shs.samplesize$total_n,
+           prob = "totalsize",
+           control = shs.control)
 
 # Merge sampling frame and drawn sample and sort data frame
 shs.frameandmatchedsample <- shs.sframe %>% 
@@ -73,7 +93,11 @@ shs.frameandmatchedsample <- shs.sframe %>%
 # a warning message will be displayed when executing the code below.
 # This is to be expected and nothing to be concerned about.
 shs.reservesample <- shs.totalsample %>% 
-  sampling(sample_size = shs.samplesize$reserve_n)
+  sampling(stratum = "la_code",
+           sample_size = shs.samplesize$reserve_n,
+           prob = rep(1/nrow(shs.totalsample), 
+                      times = nrow(shs.totalsample)),
+           control = shs.control)
 
 # Remove reserve sample from contractor sample
 shs.mainsample <- anti_join(x = shs.totalsample, 
@@ -86,7 +110,11 @@ nrow(shs.mainsample)
 shs.contractorsample <- shs.mainsample %>%
   
   # Draw house condition sample
-  sampling(sample_size = shs.samplesize$house_condition_n) %>%
+  sampling(stratum = "la_code",
+           sample_size = shs.samplesize$house_condition_n,
+           prob = rep(1/nrow(shs.mainsample), 
+                      times = nrow(shs.mainsample)),
+           control = shs.control) %>%
   
   # Add flag for sampled addresses
   mutate(houseconditionflag = 1) %>%
@@ -103,7 +131,7 @@ nrow(shs.contractorsample)
 
 shs.contractor.export <- shs.contractorsample %>% prepare_for_export()
 
-### 7 - Post-processing ---- 
+### 8 - Post-processing ---- 
 
 # generate streams 1:4
 streams1 <- stream_allocation(1, 4)
@@ -131,9 +159,11 @@ shs.contractor.export <- shs.contractor.export %>%
 # Determine which households at multiple occupancy addresses gets interviewed
 shs.contractor.export <- shs.contractor.export %>% selected_mo()
 
-### 8 - Export sample  ----
+### 9 - Export sample  ----
 
 # Code to export sampled addresses into output folder
+# Current date is automatically added to file name to avoid 
+# overwriting existing files
 
 export_rds(shs.totalsample)
 
