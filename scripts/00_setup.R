@@ -31,7 +31,7 @@ walk(list.files(here("functions"), pattern = "\\.R$", full.names = TRUE),
 # The config.R script is the only file which needs to be updated before 
 # the RAP can be run. 
 
-source(here::here("code", "config.R"))
+source(here::here("scripts", "config.R"))
 
 ### 4 - Create folders ----
 
