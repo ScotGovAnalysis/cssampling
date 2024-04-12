@@ -1,5 +1,5 @@
 #########################################################################
-# Name of file - shes_02_biomod.R
+# Name of file - 04_shes_biomod.R
 #
 # Type - Reproducible Analytical Pipeline (RAP)
 # Written/run on - RStudio Desktop
@@ -11,12 +11,15 @@
 
 #########################################################################
 
+# clear environment
+rm(list=ls())
+
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and 
 # functions and executes the config.R script.
 
-source(here::here("code", "00_setup.R"))
+source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import files ---- 
 
@@ -170,3 +173,7 @@ write.csv(shes.contractorsample.export,
                  ".csv"),
           row.names = FALSE)
 
+### END OF SCRIPT ####
+
+# clear environment
+rm(list=ls())

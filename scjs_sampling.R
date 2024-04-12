@@ -17,7 +17,7 @@
 # Run setup script which loads all required packages and 
 # functions and executes the config.R script.
 
-source(here::here("code", "00_setup.R"))
+source(here::here("scripts", "00_setup.R"))
 
 ### 1 - PAF ----
 
@@ -26,20 +26,20 @@ source(here::here("code", "00_setup.R"))
 paf_list <- list.files(path = here("lookups"),
                        pattern = "paf")
 if(!any(grepl(paf_v, paf_list))){
-  source(here::here("code", "01_paf.R"))
+  source(here::here("scripts", "01_paf.R"))
 }
 
 ### 2 - Previously sampled addresses ----
 
 # Run the used addresses script to identify all previously sampled addresses
-source(here::here("code", "02_used_addresses.R"))
+source(here::here("scripts", "02_used_addresses.R"))
 
 ### 3 - Sampling ----
 
 # Run the sampling script to draw the sample and post-process it
-source(here::here("code", "03_scjs_sampling.R"))
+source(here::here("scripts", "03_scjs_sampling.R"))
 
 ### 4 - Sample checking ----
 
 # Run the checking script to confirm the drawn sample meets requirements
-source(here::here("code", "04_scjs_checking.R"))
+source(here::here("scripts", "04_scjs_checking.R"))

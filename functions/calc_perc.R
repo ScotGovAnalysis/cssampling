@@ -14,7 +14,7 @@
 calc_perc <- function(df, grouping_variable) {
   group <- enquo(grouping_variable)
   df %>% 
-  group_by(!!!group) %>% 
+  group_by(!!group) %>% 
   summarise(n = n()) %>%
   mutate(perc = n/sum(n)*100)
 }

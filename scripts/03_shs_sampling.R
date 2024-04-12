@@ -1,5 +1,5 @@
 #########################################################################
-# Name of file - shs_01_sampling.R
+# Name of file - 03_shs_sampling.R
 #
 # Type - Reproducible Analytical Pipeline (RAP)
 # Written/run on - RStudio Desktop
@@ -11,23 +11,15 @@
 
 #########################################################################
 
+# clear environment
+rm(list=ls())
+
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and functions and 
 # executes the config.R script.
 
-source(here::here("code", "00_setup.R"))
-
-# Check if PAF script has been run with most recent PAF file
-# If it hasn't been run, run PAF script
-paf_list <- list.files(path = here("lookups"),
-                       pattern = "paf")
-if(!any(grepl(paf_v, paf_list))){
-  source(here::here("code", "0a_paf.R"))
-}
-
-# Run the used addresses script to identify all previously sampled addresses
-source(here::here("code", "0b_used_addresses.R"))
+source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import files ---- 
 
@@ -179,3 +171,8 @@ write.csv(shs.contractor.export,
                  syear,
                  ".csv"),
           row.names = FALSE)
+
+### END OF SCRIPT ####
+
+# clear environment
+rm(list=ls())

@@ -1,5 +1,5 @@
 #########################################################################
-# Name of file - 0b_used_addresses.R
+# Name of file - 02_used_addresses.R
 #
 # Type - Reproducible Analytical Pipeline (RAP)
 # Written/run on - RStudio Desktop
@@ -10,12 +10,15 @@
 
 #########################################################################
 
+# clear environment
+rm(list=ls())
+
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and functions and 
 # executes the config.R script.
 
-source(here::here("code", "00_setup.R"))
+source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import files ----
 
@@ -27,8 +30,7 @@ usedaddresses <-
                           transform(
                             haven::read_sas(previoussamples.path[x], 
                                             col_select = "UDPRN"),
-                            survey = previoussamples.path[x]
-                          )))
+                            survey = previoussamples.path[x])))
 
 ### 2 - Process data ----
 
@@ -48,7 +50,7 @@ usedaddresses <- usedaddresses %>%
                                              ignore_case = TRUE)) ~ "ssas")) %>%
   rename(udprn = UDPRN)
 
-# Keep unique udprn and survey combination and select required variables
+# Keep unique UDPRN and survey combination and select required variables
 usedaddresses <- usedaddresses %>% 
   group_by(udprn, survey) %>% 
   count() %>% 
@@ -63,5 +65,8 @@ write_rds(
   compress = "gz"
 )
 
+### END OF SCRIPT ####
 
+# clear environment
+rm(list=ls())
 

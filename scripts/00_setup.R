@@ -74,3 +74,6 @@ shes.path <- subfolders[2]
 # add path of SHS output folder
 shs.path <- subfolders[3]
 
+### 6 - Extract PAF version from file name ----
+
+paf_v <- str_match(infilenm.path, "\\_\\s*(.*?)\\s*\\.txt")[, 2]

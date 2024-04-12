@@ -84,6 +84,8 @@ multiple_occupancy <- function(sample_frame) {
       "xcoord",
       "ycoord",
       "datazone",
+      "dz11",
+      "la",
       "laa",
       "activeflag",
       "pactive",
@@ -91,8 +93,13 @@ multiple_occupancy <- function(sample_frame) {
       "multiocc",
       "dz11_urbrur2020",
       "simd20rank",
+      "average_simd20_rank",
       "dz11_urbrur2020_8fold",
-      "shes_clustersize"))) %>%
+      "shes_clustersize",
+      "council_tax_band",
+      "hb_code",
+      "cluster21",
+      "chp"))) %>%
     
     # Create multisize variable:
     # If multiocc is 1 or 2, then multisize 1.
@@ -107,8 +114,8 @@ multiple_occupancy <- function(sample_frame) {
       # In the case of SHeS, the results are then multiplied by
       # clustersize.
       totalsize = if (exists('shes_clustersize')) 
-        multisize * (activeflag / pactive) * shes_clustersize else
-        multisize * (activeflag / pactive),
+        {multisize * (activeflag / pactive) * shes_clustersize} else
+        {multisize * (activeflag / pactive)},
       la_code = as.numeric(la_code))
   
   return(sframe)

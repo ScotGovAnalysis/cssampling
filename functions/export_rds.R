@@ -22,7 +22,7 @@ export_rds <- function(object) {
   write_rds(
   object, 
   paste0(path,
-         Sys.time(),
+         Sys.Date(),
          "_",
          substitute(object),
          ".",

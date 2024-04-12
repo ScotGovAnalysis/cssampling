@@ -1,5 +1,5 @@
 #########################################################################
-# Name of file - 0a_PAF.R
+# Name of file - 01_PAF.R
 #
 # Type - Reproducible Analytical Pipeline (RAP)
 # Written/run on - RStudio Desktop
@@ -20,12 +20,15 @@
 
 #########################################################################
 
+# clear environment
+rm(list=ls())
+
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and functions and 
 # executes the config.R script.
 
-source(here::here("code", "00_setup.R"))
+source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import files ----
 
@@ -41,16 +44,17 @@ rawpaf <-  fread(infilenm.path,
 
 # Import datazone information and add indicator for SHeS year
 dz_info <- haven::read_sas(dz.path) %>%
-  clean_names_modified() %>%
-  mutate(shes_y1 = ifelse(shes_set == "A", 1, 0),
-         shes_y2 = ifelse(shes_set == "B", 1, 0),
-         shes_y3 = ifelse(shes_set == "C", 1, 0),
-         shes_y4 = ifelse(shes_set == "D", 1, 0))
+  clean_names_modified()
 
 # Import dead postcode file
 postcodes <- read.csv(pcd.path, header = TRUE, na = "") %>%
   clean_names_modified() %>%
   select(postcode, date_of_deletion)
+
+# Import SHeS strata file
+shes.strata <- read.csv(shes.strata.path, 
+                        header = TRUE, na = "") %>%
+  clean_names_modified()
 
 ### 2 - Postcode address file (PAF) ----
 
@@ -154,7 +158,11 @@ deadpconpaf1 <- merge(x = paf, y = deadpconpaf,
                       by = "udprn", all.y = TRUE)
 
 # deadpconpaf1 should be empty
-nrow(deadpconpaf1) == 0
+# stop if this isn't the case
+{
+  if (all(nrow(deadpconpaf1) == 0) == FALSE)
+  {stop("PAF should not contain udprns known to have dead postcodes")}
+}
 
 # Merges PAF with udprns known to have dead postcodes and 
 # saves a clean PAF which contains only udprns with live postcodes
@@ -197,6 +205,15 @@ nrow(residential)
 ### 6 - SHeS strata  ----
 
 # Code to add SHeS year sample data. 
+residential <- shes.strata %>%
+  mutate(shes_y1 = ifelse(shes_set == "A", 1, 0),
+         shes_y2 = ifelse(shes_set == "B", 1, 0),
+         shes_y3 = ifelse(shes_set == "C", 1, 0),
+         shes_y4 = ifelse(shes_set == "D", 1, 0)) %>%
+  right_join(dz_info) %>%
+  right_join(residential)
+nrow(residential)
+
 
 # Remove observations with infrequent la_scode, la_code and laa combination
 pafaux <- residential %>% 
@@ -281,14 +298,21 @@ final_paf <- paf_check %>%
 # Check harmonisation was successful 
 # (all local authorities should have more than 1000 addresses)
 final_paf_check <- final_paf %>% group_by(laa) %>% count()
-all(final_paf_check$n > 1000)
-
+{
+  if (all(final_paf_check$n > 1000) == FALSE)
+    {stop("At least one local authority has fewer than 1,000 addresses")}
+}
 
 ### 7 - Export final PAF  ----
 
 # Code to export final PAF into lookups folder
 write_rds(
   final_paf,
-  here("lookups", paste0(Sys.Date(), "_final_paf.rds")),
+  here("lookups", paste0(paf_v, "_final_paf.rds")),
   compress = "gz"
 )
+
+### END OF SCRIPT ####
+
+# clear environment
+rm(list=ls())
