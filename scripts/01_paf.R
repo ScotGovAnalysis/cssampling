@@ -39,7 +39,7 @@ rawpaf <-  fread(infilenm.path,
                  sep = ",") %>%
   clean_names_modified() %>%
   select(-c(datazone, simd, urb_rur8, urb_rur6, id)) %>%
-  mutate_all(list(~na_if(.,""))) %>%
+  mutate_if(is.character, na_if, c('')) %>%
   mutate(datazone = substr(x2011datazone, 1, 9))
 
 # Import datazone information and add indicator for SHeS year
@@ -213,7 +213,6 @@ residential <- shes.strata %>%
   right_join(dz_info) %>%
   right_join(residential)
 nrow(residential)
-
 
 # Remove observations with infrequent la_scode, la_code and laa combination
 pafaux <- residential %>% 
