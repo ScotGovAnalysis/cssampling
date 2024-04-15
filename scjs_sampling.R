@@ -23,8 +23,6 @@ source(here::here("scripts", "00_setup.R"))
 
 # Check if PAF script has been run with most recent PAF file
 # If it hasn't been run, run PAF script
-paf_list <- list.files(path = here("lookups"),
-                       pattern = "paf")
 if(!any(grepl(paf_v, paf_list))){
   source(here::here("scripts", "01_paf.R"))
 }
