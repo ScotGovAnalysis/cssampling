@@ -39,7 +39,7 @@ rawpaf <-  fread(infilenm.path,
                  sep = ",") %>%
   clean_names_modified() %>%
   select(-c(datazone, simd, urb_rur8, urb_rur6, id)) %>%
-  mutate_if(is.character, na_if, c('')) %>%
+  mutate(across(where(is.character), ~ na_if(.x, ""))) %>%
   mutate(datazone = substr(x2011datazone, 1, 9))
 
 # Import datazone information and add indicator for SHeS year
