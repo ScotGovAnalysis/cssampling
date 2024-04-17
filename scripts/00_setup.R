@@ -20,6 +20,7 @@ library(here)
 library(openxlsx)
 library(readxl)
 library(rlang)
+library(pbapply)
 
 ### 2 - Load functions from functions folder of Rproject ----
 

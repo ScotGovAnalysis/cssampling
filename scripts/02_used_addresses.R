@@ -13,6 +13,9 @@
 # clear environment
 rm(list=ls())
 
+# Add message to inform user about progress
+message("Execute used addresses script")
+
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and functions and 
@@ -22,10 +25,13 @@ source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import files ----
 
+# Add message to inform user about progress
+message("   Import data")
+
 # Import all previously sampled address files and 
 # add column with file name
 usedaddresses <-
-  do.call(rbind, lapply(seq_along(previoussamples.path),
+  do.call(rbind, pblapply(seq_along(previoussamples.path),
                         function(x)
                           transform(
                             haven::read_sas(previoussamples.path[x], 
@@ -33,6 +39,9 @@ usedaddresses <-
                             survey = previoussamples.path[x])))
 
 ### 2 - Process data ----
+
+# Add message to inform user about progress
+message("   Process data")
 
 # Mutate file name to name of survey and clean names
 usedaddresses <- usedaddresses %>%
@@ -57,6 +66,9 @@ usedaddresses <- usedaddresses %>%
   select(udprn, survey)
 
 ### 3 - Export used addresses  ----
+
+# Add message to inform user about progress
+message("   Export used addresses")
 
 # Code to export used addresses into lookups folder
 write_rds(

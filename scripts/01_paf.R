@@ -21,7 +21,10 @@
 #########################################################################
 
 # clear environment
-rm(list=ls())
+rm(list = ls())
+
+# Add message to inform user about progress
+message("Execute PAF script")
 
 ### 0 - Setup ----
 
@@ -31,6 +34,9 @@ rm(list=ls())
 source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import files ----
+
+# Add message to inform user about progress
+message("   Import data")
 
 # Code to import the postcode address file, clean names, remove columns 
 # that aren't needed, convert "" to NA and clean datazone variable
@@ -58,6 +64,9 @@ shes.strata <- read.csv(shes.strata.path,
 
 ### 2 - Postcode address file (PAF) ----
 
+# Add message to inform user about progress
+message("   Subset PAF")
+
 # Count addresses with missing udprn
 nrow(rawpaf %>% filter(is.na(udprn) == TRUE))
 
@@ -75,7 +84,8 @@ nrow(rawpaf)
 
 ### 3 - Multiple occupancy indicator  ----
 
-# Code to create a multiple occupancy indicator
+# Add message to inform user about progress
+message("   Create multiple occupancy indicator")
 
 # Create a dummy variable counting every line in the PAF and 
 # select needed variables
@@ -103,7 +113,8 @@ paf <- merge(x = rawpaf, y = mo,
 
 ### 4 - Remove dead postcodes  ----
 
-# Code to remove dead postcodes from the postcode address file
+# Add message to inform user about progress
+message("   Remove dead postcodes from PAF")
 
 # separate postcodes and remove duplicates
 postcodes <- postcodes %>%
@@ -176,10 +187,13 @@ clean_paf <- clean_paf %>%
 
 ### 5 - Residential vs non-residential split  ----
 
-# Code to split addresses the PAF into two datasets:
+# Code to split addresses into two datasets:
 # 1. res is addresses that we can be confident are residential
 # 2. nonres is addresses that do not have a multi occupancy indicator 
 # but have an organisational name
+
+# Add message to inform user about progress
+message("   Split addresses into residential and non-residential")
 
 # Count non-residential addresses
 nrow(clean_paf %>% 
@@ -203,6 +217,9 @@ residential <- anti_join(x = res, y = unit,
 nrow(residential)
 
 ### 6 - SHeS strata  ----
+
+# Add message to inform user about progress
+message("   Add SHeS strata")
 
 # Code to add SHeS year sample data. 
 residential <- shes.strata %>%
@@ -303,6 +320,9 @@ final_paf_check <- final_paf %>% group_by(laa) %>% count()
 }
 
 ### 7 - Export final PAF  ----
+
+# Add message to inform user about progress
+message("   Export final PAF")
 
 # Code to export final PAF into lookups folder
 write_rds(

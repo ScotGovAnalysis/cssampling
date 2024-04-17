@@ -14,6 +14,9 @@
 # clear environment
 rm(list=ls())
 
+# Add message to inform user about progress
+message("Execute sampling script")
+
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and functions and 
@@ -21,6 +24,9 @@ rm(list=ls())
 source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import files ---- 
+
+# Add message to inform user about progress
+message("   Import data")
 
 # Identify most recent used addresses file
 recent_usedaddresses <- most_recent_file(path = here("lookups"), 
@@ -48,16 +54,25 @@ scjs.samplesize <- read.csv(scjs.samplesize.path,
 
 ### 2 - Used addresses ---- 
 
+# Add message to inform user about progress
+message("   Add metrics for active addresses")
+
 scjs.sframe <- used_addresses(prev_samples = usedaddresses,
                              paf = clean_paf)
 nrow(scjs.sframe)
 
 ### 3 - Multiple occupancy  ---- 
 
+# Add message to inform user about progress
+message("   Create multiple occupancy indicator")
+
 scjs.sframe <- scjs.sframe %>% multiple_occupancy()
 nrow(scjs.sframe)
 
 ### 4 - Sampling ---- 
+
+# Add message to inform user about progress
+message("   Draw sample")
 
 scjs.control <- c("dz11_urbrur2020",
                   "simd20rank",
@@ -80,6 +95,9 @@ scjs.frameandmatchedsample <- scjs.sframe %>%
 
 ### 5 - Draw reserve sample ---- 
 
+# Add message to inform user about progress
+message("   Draw reserve sample")
+
 # Draw stratified systematic sample
 scjs.reservesample <- scjs.totalsample %>% 
   sampling(stratum = "la_code",
@@ -96,9 +114,15 @@ nrow(scjs.contractorsample)
 
 ### 6 - Prepare for export ----
 
+# Add message to inform user about progress
+message("   Prepare for export")
+
 scjs.contractor.export <- scjs.contractorsample %>% prepare_for_export()
 
 ### 7 - Post-processing ---- 
+
+# Add message to inform user about progress
+message("   Post-process data")
 
 # generate streams 1:12
 streams <- stream_allocation(1, 12)
@@ -115,6 +139,9 @@ scjs.contractor.export <- scjs.contractor.export %>% selected_mo()
 # Code to export sampled addresses into output folder
 # Current date is automatically added to file name to avoid 
 # overwriting existing files
+
+# Add message to inform user about progress
+message("   Export sample")
 
 export_rds(scjs.totalsample)
 

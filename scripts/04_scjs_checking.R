@@ -14,6 +14,9 @@
 # clear environment
 rm(list=ls())
 
+# Add message to inform user about progress
+message("Execute checking script")
+
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and functions and 
@@ -22,6 +25,9 @@ rm(list=ls())
 source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import data ---- 
+
+# Add message to inform user about progress
+message("   Import data")
 
 # Identify most recent sampling frame matched with sample
 recent_frameandmatchedsample <- most_recent_file(path = scjs.path, 
@@ -67,6 +73,9 @@ hh.est.dz <- read_excel(hh_dz.path,
 
 ### 2 - Add indicator for sampled addresses ---- 
 
+# Add message to inform user about progress
+message("   Add indicator for sampled addresses")
+
 # Add indicator for sampled addressed 
 # ('Yes' = sampled, 'No' = not sampled)
 scjs.frameandmatchedsample <- scjs.frameandmatchedsample %>%
@@ -82,7 +91,13 @@ nrow(paf)
 
 ### *TOTAL SAMPLE* ----
 
+# Add message to inform user about progress
+message("   Total sample")
+
 ### 3 - Check sample size requirements ----
+
+# Add message to inform user about progress
+message("      Check sample size requirements")
 
 # Compare sample size requirements with drawn sample
 contractor.sample.size.check <- contractor.sample %>% 
@@ -94,6 +109,9 @@ contractor.sample.size.check <- contractor.sample %>%
 
 ### 4 - Check for previously sampled addresses ----
 
+# Add message to inform user about progress
+message("      Check for previously sampled addresses")
+
 # Import previously sampled and delivered UDPRNs
 prev.samples <- delivered_udprn(sampling_year = syear,
                                 filepath = datashare.path)
@@ -103,6 +121,9 @@ udprn.qa <- prev.samples[prev.samples$udprn %in% contractor.sample$udprn]
 udprn.qa
 
 ### 5 - Mean SIMD for sample & sampling frame by local authority ----
+
+# Add message to inform user about progress
+message("      Mean SIMD for sample & sampling frame by local authority")
 
 # Calculate SIMD statistics for sample
 sample.simd <- total.sample %>% 
@@ -133,6 +154,9 @@ simd.qa <- merge(sample.simd, paf.simd,
 
 ### 6 - Urban/rural classification ----
 
+# Add message to inform user about progress
+message("      Urban/rural classification")
+
 # Calculate urbrur percentage of sampled and non-sampled addresses
 # in each local authority
 urbrur.la.qa <- scjs.frameandmatchedsample %>%
@@ -148,6 +172,9 @@ urbrur.la.qa <- scjs.frameandmatchedsample %>%
   mutate(diff = selected_No - selected_Yes)
 
 ### 7 - Check postcodes ----
+
+# Add message to inform user about progress
+message("      Check postcodes")
 
 # Add column indicating whether an address is part of the contractor sample 
 # or reserve sample
@@ -168,8 +195,10 @@ pcode <- total.sample %>%
   {stop("At least one postcode has been sampled more than once.")}
 }
 
-
 ### 8 - Check business addresses ----
+
+# Add message to inform user about progress
+message("      Check business addresses")
 
 # Confirm that the number of businesses is low
 # print warning if this isn't the case
@@ -185,6 +214,9 @@ business.qa <- total.sample %>%
 business.qa
 
 ### 9 - Check multisize distribution ----
+
+# Add message to inform user about progress
+message("      Check multisize distribution")
 
 # Check multi occupancy size for sample and PAF 
 # Sample %s should be similar to PAF
@@ -211,7 +243,13 @@ multisize.qa <- merge(contractor.multisize[,1:3],
 
 ### *CONTRACTOR SAMPLE* ----
 
+# Add message to inform user about progress
+message("   Contractor sample")
+
 ### 9 - Check SIMD in contractor sample ----
+
+# Add message to inform user about progress
+message("      Check SIMD")
 
 contractor.simd.qa <- contractor.sample %>% 
   group_by(laa) %>% 
@@ -222,6 +260,9 @@ contractor.simd.qa <- contractor.sample %>%
   mutate(diff = mean_contractor/mean_paf-1)
 
 ### 10 - Check business addresses in contractor sample ----
+
+# Add message to inform user about progress
+message("      Check business addresses in contractor sample")
 
 contractor.business <- contractor.sample %>% 
   filter(grepl('Business', print_address))
@@ -238,6 +279,9 @@ contractor.indust <- contractor.sample %>%
 }
 
 ### 11 - Check stream allocation in contractor sample ----
+
+# Add message to inform user about progress
+message("      Check stream allocation")
 
 # Checks allocation of sample across individual streams by LA
 # For each local authority, calculate the total and mean number of 
@@ -266,6 +310,9 @@ contractor.stream.qa <- contractor.sample %>%
   }
 
 ### 12 - Check data zones in contractor sample ----
+
+# Add message to inform user about progress
+message("      Check data zones")
 
 contractor.sample.dz <- contractor.sample %>% 
   group_by(datazone) %>%
@@ -301,6 +348,9 @@ contractor.simdq.qa <- prev_cur_comp(current_df = contractor.la.simdq,
     
 ### 14 - Check urbrur in contractor sample ----
 
+# Add message to inform user about progress
+message("      Check urbrur")
+
 contractor.la.urbrur <- la_grouping(df = contractor.sample,
                                     grouping_variable = dz11_urbrur2020)
 
@@ -326,6 +376,9 @@ contractor.urbrur.qa <- prev_cur_comp(contractor.urbrur,
 ### *EXPORT* ----
 
 ### 15 - Export checks to excel file for manual inspection  ----
+
+# Add message to inform user about progress
+message("   Export")
 
 # Create list of all objects to be exported
 qa <- list(contractor.sample = contractor.sample,
