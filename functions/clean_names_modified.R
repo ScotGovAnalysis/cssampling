@@ -14,5 +14,6 @@ clean_names_modified <- function(data){
               replace = c("SHeS" = "shes",
                           "SheS" = "shes",
                           "SHS" = "shs",
-                          "SCJS" = "scjs"))
+                          "SCJS" = "scjs")) %>%
+    rename(any_of(c(la = "laa")))
 }

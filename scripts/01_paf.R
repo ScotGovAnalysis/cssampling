@@ -231,10 +231,10 @@ residential <- shes.strata %>%
   right_join(residential)
 nrow(residential)
 
-# Remove observations with infrequent la_scode, la_code and laa combination
+# Remove observations with infrequent la_scode, la_code and la combination
 pafaux <- residential %>% 
   filter(is.na(la_code) == FALSE) %>%
-  group_by(la_scode, la_code, laa) %>% 
+  group_by(la_scode, la_code, la) %>% 
   count() %>%
   filter(n > 1000)
 
@@ -243,41 +243,41 @@ paf_check <- residential %>%
   left_join(pafaux)
 nrow(paf_check)
 
-# Harmonise laa and la_code variables
+# Harmonise la and la_code variables
 final_paf <- paf_check %>%
   mutate(la_code = 0,
-         laa = ifelse(la_scode == "S12000033", "Aberdeen City", laa),
-         laa = ifelse(la_scode == "S12000034", "Aberdeenshire", laa),
-         laa = ifelse(la_scode == "S12000041", "Angus", laa),
-         laa = ifelse(la_scode == "S12000035", "Argyll and Bute", laa),
-         laa = ifelse(la_scode == "S12000005", "Clackmannanshire", laa),
-         laa = ifelse(la_scode == "S12000006", "Dumfries and Galloway", laa),
-         laa = ifelse(la_scode == "S12000042", "Dundee City", laa),
-         laa = ifelse(la_scode == "S12000008", "East Ayrshire", laa),
-         laa = ifelse(la_scode == "S12000045", "East Dunbartonshire", laa),
-         laa = ifelse(la_scode == "S12000010", "East Lothian", laa),
-         laa = ifelse(la_scode == "S12000011", "East Renfrewshire", laa),
-         laa = ifelse(la_scode == "S12000036", "City of Edinburgh", laa),
-         laa = ifelse(la_scode == "S12000013", "Na h-Eileanan Siar", laa),
-         laa = ifelse(la_scode == "S12000014", "Falkirk", laa),
-         laa = ifelse(la_scode == "S12000047", "Fife", laa),
-         laa = ifelse(la_scode == "S12000049", "Glasgow City", laa),
-         laa = ifelse(la_scode == "S12000017", "Highland", laa),
-         laa = ifelse(la_scode == "S12000018", "Inverclyde", laa),
-         laa = ifelse(la_scode == "S12000019", "Midlothian", laa),
-         laa = ifelse(la_scode == "S12000020", "Moray", laa),
-         laa = ifelse(la_scode == "S12000021", "North Ayrshire", laa),
-         laa = ifelse(la_scode == "S12000050", "North Lanarkshire", laa),
-         laa = ifelse(la_scode == "S12000023", "Orkney Islands", laa),
-         laa = ifelse(la_scode == "S12000048", "Perth and Kinross", laa),
-         laa = ifelse(la_scode == "S12000038", "Renfrewshire", laa),
-         laa = ifelse(la_scode == "S12000026", "Scottish Borders", laa),
-         laa = ifelse(la_scode == "S12000027", "Shetland Islands", laa),
-         laa = ifelse(la_scode == "S12000028", "South Ayrshire", laa),
-         laa = ifelse(la_scode == "S12000029", "South Lanarkshire", laa),
-         laa = ifelse(la_scode == "S12000030", "Stirling", laa),
-         laa = ifelse(la_scode == "S12000039", "West Dunbartonshire", laa),
-         laa = ifelse(la_scode == "S12000040", "West Lothian", laa),
+         la = ifelse(la_scode == "S12000033", "Aberdeen City", la),
+         la = ifelse(la_scode == "S12000034", "Aberdeenshire", la),
+         la = ifelse(la_scode == "S12000041", "Angus", la),
+         la = ifelse(la_scode == "S12000035", "Argyll and Bute", la),
+         la = ifelse(la_scode == "S12000005", "Clackmannanshire", la),
+         la = ifelse(la_scode == "S12000006", "Dumfries and Galloway", la),
+         la = ifelse(la_scode == "S12000042", "Dundee City", la),
+         la = ifelse(la_scode == "S12000008", "East Ayrshire", la),
+         la = ifelse(la_scode == "S12000045", "East Dunbartonshire", la),
+         la = ifelse(la_scode == "S12000010", "East Lothian", la),
+         la = ifelse(la_scode == "S12000011", "East Renfrewshire", la),
+         la = ifelse(la_scode == "S12000036", "City of Edinburgh", la),
+         la = ifelse(la_scode == "S12000013", "Na h-Eileanan Siar", la),
+         la = ifelse(la_scode == "S12000014", "Falkirk", la),
+         la = ifelse(la_scode == "S12000047", "Fife", la),
+         la = ifelse(la_scode == "S12000049", "Glasgow City", la),
+         la = ifelse(la_scode == "S12000017", "Highland", la),
+         la = ifelse(la_scode == "S12000018", "Inverclyde", la),
+         la = ifelse(la_scode == "S12000019", "Midlothian", la),
+         la = ifelse(la_scode == "S12000020", "Moray", la),
+         la = ifelse(la_scode == "S12000021", "North Ayrshire", la),
+         la = ifelse(la_scode == "S12000050", "North Lanarkshire", la),
+         la = ifelse(la_scode == "S12000023", "Orkney Islands", la),
+         la = ifelse(la_scode == "S12000048", "Perth and Kinross", la),
+         la = ifelse(la_scode == "S12000038", "Renfrewshire", la),
+         la = ifelse(la_scode == "S12000026", "Scottish Borders", la),
+         la = ifelse(la_scode == "S12000027", "Shetland Islands", la),
+         la = ifelse(la_scode == "S12000028", "South Ayrshire", la),
+         la = ifelse(la_scode == "S12000029", "South Lanarkshire", la),
+         la = ifelse(la_scode == "S12000030", "Stirling", la),
+         la = ifelse(la_scode == "S12000039", "West Dunbartonshire", la),
+         la = ifelse(la_scode == "S12000040", "West Lothian", la),
          la_code = ifelse(la_scode == "S12000033", "100", la_code),
          la_code = ifelse(la_scode == "S12000034", "110", la_code),
          la_code = ifelse(la_scode == "S12000041", "120", la_code),
@@ -313,7 +313,7 @@ final_paf <- paf_check %>%
 
 # Check harmonisation was successful 
 # (all local authorities should have more than 1000 addresses)
-final_paf_check <- final_paf %>% group_by(laa) %>% count()
+final_paf_check <- final_paf %>% group_by(la) %>% count()
 {
   if (all(final_paf_check$n > 1000) == FALSE)
     {stop("At least one local authority has fewer than 1,000 addresses")}

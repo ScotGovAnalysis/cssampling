@@ -25,16 +25,17 @@ la_grouping <- function(df, grouping_variable) {
   # the grouping variable in each local authority and 
   # transpose the output
   df %>% 
-  group_by(laa, !!!group) %>% 
-  summarise(n = n(),
-            .groups = 'drop') %>%
-  group_by(laa) %>%
-  mutate(percent = n/sum(n) * 100) %>%
-  select(-n) %>%
-  pivot_wider(names_from = !!group, 
-              names_prefix = paste0(rlang::as_name(group), 
-                                    "_"),
-              values_from = percent,
-              values_fill = list(percent = 0))
+    group_by(la, !!!group) %>% 
+    summarise(n = n(),
+              .groups = 'drop') %>%
+    group_by(la) %>%
+    mutate(percent = n/sum(n) * 100) %>%
+    select(-n) %>%
+    pivot_wider(names_from = !!group, 
+                names_prefix = paste0(rlang::as_name(group), 
+                                      "_"),
+                values_from = percent,
+                values_fill = list(percent = 0))  %>%
+    ungroup()
 }
 
