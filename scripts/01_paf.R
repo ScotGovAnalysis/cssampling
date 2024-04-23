@@ -40,13 +40,17 @@ message("   Import data")
 
 # Code to import the postcode address file, clean names, remove columns 
 # that aren't needed, convert "" to NA and clean datazone variable
-rawpaf <-  fread(infilenm.path, 
-                 header = TRUE, 
-                 sep = ",") %>%
+rawpaf <-  read_csv(infilenm.path,
+                    col_names = TRUE,
+                    na = c("", "NA"),
+                    col_select = c(Organisation, Property, Street, 
+                                   Locality, Town, Postcode, PrintAddress,
+                                   Multi_occupancy, CouncilArea, UDPRN,
+                                   YCOORD, XCOORD, "2011Datazone", LACode, 
+                                   UPRN, CouncilTaxBand)) %>%
   clean_names_modified() %>%
-  select(-c(datazone, simd, urb_rur8, urb_rur6, id)) %>%
-  mutate(across(where(is.character), ~ na_if(.x, ""))) %>%
-  mutate(datazone = substr(x2011datazone, 1, 9))
+  mutate(datazone = substr(x2011datazone, 1, 9),
+         udprn = as.numeric(udprn))
 
 # Import datazone information and add indicator for SHeS year
 dz_info <- haven::read_sas(dz.path) %>%
@@ -95,8 +99,10 @@ rawmo <- rawpaf %>%
 
 # Create multiocc variable
 # Groups rawmo by udprn and var and counts observations
-mo <- rawmo[, .(multiocc = .N), 
-            by = c("udprn", "var")] %>%
+mo <- rawmo %>%
+  group_by(udprn, var) %>%
+  summarise(multiocc = n(),
+            .groups = "drop")%>%
   select(-var)
 
 # Remove duplicate udprns

@@ -36,7 +36,7 @@ delivered_udprn <- function(sampling_year, filepath){
   
   # Import all delivered UDPRNs
   prev.samples <- lapply(files_del, import_multiple_files_csv)
-  prev.samples <- rbindlist(prev.samples)
+  prev.samples <- do.call("rbind", prev.samples)
   
   return(prev.samples)
 }
