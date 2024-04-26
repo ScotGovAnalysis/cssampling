@@ -58,7 +58,19 @@ nrow(shes.sframe)
 
 ### 3 - Cluster size ---- 
 
-shes.sframe <- shes.sframe %>% add_clusters(clusters = shes_clusters)
+shes.sframe <- shes.sframe %>% 
+  
+  # remove all columns that contain "shes_y" 
+  select(-contains("shes_y")) %>%
+  
+  # add SHeS cluster information
+  left_join(shes_clusters) %>%
+  
+  # create 'shes_clustersize' column based on shes.surveysweep
+  mutate(across(
+    .cols = contains(paste0("shes_y", 
+                            shes.surveysweep), ignore.case = FALSE),
+    .names = 'shes_clustersize'))
 nrow(shes.sframe)
 
 ### 4 - Multiple occupancy  ---- 
