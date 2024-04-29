@@ -77,13 +77,13 @@ qa_export <- function(list_df, survey){
     conditionalFormatting(wb = wb, sheet = sheet,
                           cols = overlap, rows = 2:(nrow(data)+1),
                           type = "expression",
-                          rule = ' == "no"',
+                          rule = ' == "yes"',
                           style = greenstyle)
     
     conditionalFormatting(wb = wb, sheet = sheet,
                           cols = overlap, rows = 2:(nrow(data)+1),
                           type = "expression",
-                          rule = ' == "yes"',
+                          rule = ' == "no"',
                           style = redstyle)
   }
   
@@ -104,6 +104,8 @@ qa_export <- function(list_df, survey){
   # export to Excel file
   path <- eval(as.name(paste0(survey, ".path")))
   saveWorkbook(wb, file = paste0(path, 
+                                 Sys.Date(),
+                                 "_",
                                survey,
                                ".contractorsample.",
                                syear,

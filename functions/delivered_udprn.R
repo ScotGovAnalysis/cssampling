@@ -4,9 +4,9 @@
 #' 
 #' @param filepath File path of folder which is to be searched.
 #' 
-#' @returns Imports the UDPRNs of all samples drawn in the four years prior 
-#' to the current sample being taken that were delivered to and 
-#' used by the contractor.
+#' @returns UPDRNs present in the contractor sample that were sampled
+#' within the last four years. Data frame also includes the name of the file
+#' which contains the previous sample.
 #' 
 #' @examples
 #' delivered_udprn(syear, datashare.path)
@@ -38,7 +38,16 @@ delivered_udprn <- function(sampling_year, filepath){
   prev.samples <- lapply(files_del, import_multiple_files_csv)
   prev.samples <- do.call("rbind", prev.samples)
   
-  return(prev.samples)
+  # Check if any of the recently sampled UDPRNs has been previously delivered
+  udprn.qa <- prev.samples[0 %in% contractor.sample$udprn]
+  
+  # Print warning if drawn sample includes previously sampled addresses
+  {
+    if (nrow(udprn.qa) != 0)
+    {warning("Drawn sample includes previously sampled addresses")}
+  }
+  
+  return(udprn.qa)
 }
 
 
