@@ -39,7 +39,8 @@ delivered_udprn <- function(sampling_year, filepath){
   prev.samples <- do.call("rbind", prev.samples)
   
   # Check if any of the recently sampled UDPRNs has been previously delivered
-  udprn.qa <- prev.samples[0 %in% contractor.sample$udprn]
+  udprn.qa <- prev.samples %>%
+    filter(udprn %in% contractor.sample$udprn)
   
   # Print warning if drawn sample includes previously sampled addresses
   {
