@@ -15,19 +15,19 @@ check_postcodes <- function(sample){
   # or reserve sample
   pcode <- sample %>% 
     count(postcode) %>% 
-    arrange(n) %>%
-    mutate(allocation = ifelse(postcode %in% contractor.sample$postcode, 
-                               "contractor", "reserve"))
+    arrange(desc(n))
   
   # Check if any postcode has been sampled more than once and if so
   # print warning
   {
     if (head(pcode$n, 1) > 5)
-    {stop("At least one postcode has been sampled more than 5 times.")}
+    {warning(paste0("At least one postcode has been sampled more than 5 times.",
+                    " Check Excel file to confirm these are all small postcodes."))}
     }
   {
-    if (tail(pcode$n, 1) > 5)
-    {stop("At least one postcode has been sampled more than 5 times.")}
+    if (tail(pcode$n, 1) > 5 )
+    {warning(paste0("At least one postcode has been sampled more than 5 times.",
+                    " Check Excel file to confirm these are all small postcodes."))}
   }
   
   return(pcode)
