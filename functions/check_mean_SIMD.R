@@ -9,13 +9,17 @@
 #' lies between the lower and upper CIs of the mean SIMD of the sample.
 #' 
 #' @examples
-#' check_mean_simd(total.sample = total.sample, paf = paf)
+#' check_mean_simd(total.sample = total.sample, paf = paf, 
+#'                 grouping_variable = la)
 
-check_mean_simd <- function(total.sample, paf) {
+check_mean_simd <- function(total.sample, paf, grouping_variable) {
+  
+  # defuse grouping_variable
+  group <- rlang::enquo(grouping_variable)
   
   # Calculate SIMD statistics for sample
   sample.simd <- total.sample %>% 
-    group_by(la) %>% 
+    group_by(!!group) %>% 
     summarise(mean_sample = mean(simd20rank),
               median_sample = median(simd20rank),
               n_sample = n(),
@@ -27,7 +31,7 @@ check_mean_simd <- function(total.sample, paf) {
   
   # calculate SIMD statistics for PAF
   paf.simd <- paf %>% 
-    group_by(la) %>%
+    group_by(!!group) %>%
     summarise(mean_paf = weighted.mean(simd20rank, totalsize),
               median_paf = median(simd20rank),
               n_paf = n(),
@@ -35,7 +39,7 @@ check_mean_simd <- function(total.sample, paf) {
   
   # Merge SIMD statistics of PAF and sample
   simd.qa <- merge(sample.simd, paf.simd, 
-                   by = "la") %>%
+                   by = as_name(group)) %>%
     mutate(nsampnpaf = n_sample / n_paf,
            overlap = ifelse(lower.ci_sample < mean_paf & upper.ci_sample > mean_paf,
                             "yes", "no"))
@@ -43,7 +47,7 @@ check_mean_simd <- function(total.sample, paf) {
   # Print warning if there is overlap between sample CIs and PAF
   {
     if (any(simd.qa$overlap != "yes"))
-    {stop("The SIMD statistic of at least one sampled address does not overlap with the SIMD of the PAF")}
+    {warning("The SIMD statistic of at least one sampled address does not overlap with the SIMD of the PAF")}
     }
   
   return(list(sample.simd, paf.simd, simd.qa))

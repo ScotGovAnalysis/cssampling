@@ -127,7 +127,11 @@ udprn.qa <- delivered_udprn(sampling_year = syear,
 # Add message to inform user about progress
 message("      Mean SIMD for sample & sampling frame by local authority")
 
-simd.qa <- check_mean_simd(total.sample, paf)
+simd.la.qa <- check_mean_simd(total.sample, paf, grouping_variable = la)
+
+message("      Mean SIMD for sample & sampling frame by health board")
+
+simd.hb.qa <- check_mean_simd(total.sample, paf, grouping_variable = hb_code)
 
 ### 6 - Urban/rural classification ----
 
@@ -165,10 +169,17 @@ message("   Contractor sample")
 ### 9 - Check SIMD in contractor sample ----
 
 # Add message to inform user about progress
-message("      Check SIMD")
+message("      Check SIMD by LA")
 
-contractor.simd.qa <- check_contractor_simd(sample = contractor.sample, 
-                                            paf.simd = simd.qa[[2]])
+contractor.simd.la.qa <- check_contractor_simd(sample = contractor.sample, 
+                                            paf.simd = simd.la.qa[[2]],
+                                            grouping_variable = la)
+
+message("      Check SIMD by health board")
+
+contractor.simd.hb.qa <- check_contractor_simd(sample = contractor.sample, 
+                                               paf.simd = simd.hb.qa[[2]],
+                                               grouping_variable = hb_code)
 
 ### 10 - Check business addresses in contractor sample ----
 
@@ -242,12 +253,14 @@ message("   Export")
 qa <- list(contractor.sample = contractor.sample,
            contractor.sample.size = contractor.sample.size.check,
            previously.sampled.udprn = udprn.qa,
-           simd.la = simd.qa[[3]],
+           simd.la = simd.la.qa[[3]],
+           simd.hb = simd.hb.qa[[3]],
            urbrur.la = urbrur.la.qa,
            sampled.postcodes = pcode,
            business.addresses = business.qa,
            multisize = multisize.qa,
-           contractor.simd.la = contractor.simd.qa,
+           contractor.simd.la = contractor.simd.la.qa,
+           contractor.simd.hb = contractor.simd.hb.qa,
            contractor.biomod = contractor.biomod.qa,
            contractor.datazone = contractor.datazone.qa,
            contractor.simdq.la = contractor.simdq.qa,

@@ -9,15 +9,20 @@
 #' sample frame.
 #' 
 #' @examples
-#' check_contractor_simd(sample = contractor.sample, paf.simd = simd.qa[[2]])
+#' check_contractor_simd(sample = contractor.sample, paf.simd = simd.qa[[2]],
+#'                       grouping_variable = la)
 
-check_contractor_simd <- function(sample, paf.simd){
+check_contractor_simd <- function(sample, paf.simd, grouping_variable){
+  
+  # defuse grouping_variable
+  group <- rlang::enquo(grouping_variable)
   
   contractor.simd.qa <- sample %>% 
-    group_by(la) %>% 
+    group_by(!!group) %>% 
     summarise(n = n(),
-              mean_contractor = mean(simd20rank)) %>%
-    merge(paf.simd, by = "la") %>%
+              mean_contractor = mean(simd20rank),
+              .groups = 'drop')  %>%
+    merge(paf.simd, by = as_name(group)) %>%
     select(-c(median_paf, n_paf)) %>%
     mutate(diff = mean_contractor/mean_paf-1)
   
