@@ -146,7 +146,7 @@ biomodsample <- sampling(df = biomod,
                                     times = nrow(biomod)),
                          control = biomod.control)
 
-biomod.frameandmatchedsample <- biomod %>% 
+shes.biomod.frameandmatchedsample <- biomod %>% 
   left_join(biomodsample) %>%
   mutate(biomod = ifelse(is.na(prob) == TRUE, 0, 1)) %>%
   select(-c(prob, stratum)) %>%
@@ -195,7 +195,7 @@ shes.full.contractorsample <- child.mainsample %>%
          hb_boost = 0) %>%
   
   # add biological module information
-  left_join(biomod.frameandmatchedsample, by = "cluster21")
+  left_join(shes.biomod.frameandmatchedsample, by = "cluster21")
 
 nrow(shes.full.contractorsample)         
 
@@ -238,6 +238,8 @@ export_rds(shes.totalsample)
 export_rds(shes.samplesize)
 
 export_rds(shes.frameandmatchedsample)
+
+export_rds(shes.biomod.frameandmatchedsample)
 
 export_rds(shes.full.contractorsample)
 
