@@ -24,7 +24,7 @@
 rm(list = ls())
 
 # Add message to inform user about progress
-message("Execute PAF script")
+cat(crayon::bold("\nExecute PAF script"))
 
 ### 0 - Setup ----
 
@@ -36,7 +36,7 @@ source(here::here("scripts", "00_setup.R"))
 ### 1 - Import files ----
 
 # Add message to inform user about progress
-message("   Import data")
+cat("\nImport data")
 
 # Code to import the postcode address file, clean names, remove columns 
 # that aren't needed, convert "" to NA and clean datazone variable
@@ -69,7 +69,7 @@ shes.strata <- read.csv(shes.strata.path,
 ### 2 - Postcode address file (PAF) ----
 
 # Add message to inform user about progress
-message("   Subset PAF")
+cat("\nSubset PAF")
 
 # Count addresses with missing udprn
 nrow(rawpaf %>% filter(is.na(udprn) == TRUE))
@@ -89,7 +89,7 @@ nrow(rawpaf)
 ### 3 - Multiple occupancy indicator  ----
 
 # Add message to inform user about progress
-message("   Create multiple occupancy indicator")
+cat("\nCreate multiple occupancy indicator")
 
 # Create a dummy variable counting every line in the PAF and 
 # select needed variables
@@ -120,7 +120,7 @@ paf <- merge(x = rawpaf, y = mo,
 ### 4 - Remove dead postcodes  ----
 
 # Add message to inform user about progress
-message("   Remove dead postcodes from PAF")
+cat("\nRemove dead postcodes from PAF")
 
 # separate postcodes and remove duplicates
 postcodes <- postcodes %>%
@@ -199,7 +199,7 @@ clean_paf <- clean_paf %>%
 # but have an organisational name
 
 # Add message to inform user about progress
-message("   Split addresses into residential and non-residential")
+cat("\nSplit addresses into residential and non-residential")
 
 # Count non-residential addresses
 nrow(clean_paf %>% 
@@ -225,7 +225,7 @@ nrow(residential)
 ### 6 - SHeS strata  ----
 
 # Add message to inform user about progress
-message("   Add SHeS strata")
+cat("\nAdd SHeS strata")
 
 # Code to add SHeS year sample data. 
 residential <- shes.strata %>%
@@ -328,7 +328,7 @@ final_paf_check <- final_paf %>% group_by(la) %>% count()
 ### 7 - Export final PAF  ----
 
 # Add message to inform user about progress
-message("   Export final PAF")
+cat("\nExport final PAF")
 
 # Code to export final PAF into lookups folder
 write_rds(

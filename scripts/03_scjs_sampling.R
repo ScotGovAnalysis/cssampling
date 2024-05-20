@@ -15,7 +15,7 @@
 rm(list=ls())
 
 # Add message to inform user about progress
-message("Execute sampling script")
+cat(crayon::bold("\nExecute sampling script"))
 
 ### 0 - Setup ----
 
@@ -26,7 +26,7 @@ source(here::here("scripts", "00_setup.R"))
 ### 1 - Import files ---- 
 
 # Add message to inform user about progress
-message("   Import data")
+cat("\nImport data")
 
 # Identify most recent used addresses file
 recent_usedaddresses <- most_recent_file(path = here("lookups"), 
@@ -55,7 +55,7 @@ scjs.samplesize <- read.csv(scjs.samplesize.path,
 ### 2 - Used addresses ---- 
 
 # Add message to inform user about progress
-message("   Add metrics for active addresses")
+cat("\nAdd metrics for active addresses")
 
 scjs.sframe <- used_addresses(prev_samples = usedaddresses,
                              paf = clean_paf)
@@ -64,7 +64,7 @@ nrow(scjs.sframe)
 ### 3 - Multiple occupancy  ---- 
 
 # Add message to inform user about progress
-message("   Create multiple occupancy indicator")
+cat("\nCreate multiple occupancy indicator")
 
 scjs.sframe <- scjs.sframe %>% multiple_occupancy()
 nrow(scjs.sframe)
@@ -72,7 +72,7 @@ nrow(scjs.sframe)
 ### 4 - Sampling ---- 
 
 # Add message to inform user about progress
-message("   Draw sample")
+cat("\nDraw sample")
 
 scjs.control <- c("dz11_urbrur2020",
                   "simd20rank",
@@ -96,7 +96,7 @@ scjs.frameandmatchedsample <- scjs.sframe %>%
 ### 5 - Draw reserve sample ---- 
 
 # Add message to inform user about progress
-message("   Draw reserve sample")
+cat("\nDraw reserve sample")
 
 # Draw stratified systematic sample
 scjs.reservesample <- scjs.totalsample %>% 
@@ -115,14 +115,14 @@ nrow(scjs.contractorsample)
 ### 6 - Prepare for export ----
 
 # Add message to inform user about progress
-message("   Prepare for export")
+cat("\nPrepare for export")
 
 scjs.contractor.export <- scjs.contractorsample %>% prepare_for_export()
 
 ### 7 - Post-processing ---- 
 
 # Add message to inform user about progress
-message("   Post-process data")
+cat("\nPost-process data")
 
 # generate streams 1:12
 streams <- stream_allocation(1, 12)
@@ -134,14 +134,14 @@ scjs.contractor.export$stream <- rep_len(streams$num,
 # Determine which households at multiple occupancy addresses gets interviewed
 scjs.contractor.export <- scjs.contractor.export %>% selected_mo()
 
-### 5 - Export sample  ----
+### 8 - Export sample  ----
 
 # Code to export sampled addresses into output folder
 # Current date is automatically added to file name to avoid 
 # overwriting existing files
 
 # Add message to inform user about progress
-message("   Export sample")
+cat("\nExport sample")
 
 export_rds(scjs.totalsample)
 

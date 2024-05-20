@@ -14,8 +14,11 @@
 # clear environment
 rm(list=ls())
 
+# indicate what survey is being checked
+survey <- "scjs"
+
 # Add message to inform user about progress
-message("Execute checking script")
+cat(crayon::bold("\nExecute checking script"))
 
 ### 0 - Setup ----
 
@@ -27,7 +30,7 @@ source(here::here("scripts", "00_setup.R"))
 ### 1 - Import data ---- 
 
 # Add message to inform user about progress
-message("   Import data")
+cat("\nImport data")
 
 # Identify most recent sampling frame matched with sample
 recent_frameandmatchedsample <- most_recent_file(path = scjs.path, 
@@ -64,17 +67,16 @@ dz11_simd20 <- haven::read_sas(dz_simd.path) %>%
 
 # Import household estimates by datazone
 last_sheet <- length(excel_sheets(hh_dz.path))
-hh.est.dz <- read_excel(hh_dz.path, 
+hh.est.dz <- suppressWarnings(read_excel(hh_dz.path, 
                         sheet = last_sheet,
-                         skip = 3) %>%
+                        skip = 3) %>%
   clean_names(replace = c("Data Zone code" = "datazone")) %>%
-  select(c("datazone", "occupied_dwellings"))
-  
+  select(c("datazone", "occupied_dwellings")))
 
 ### 2 - Add indicator for sampled addresses ---- 
 
 # Add message to inform user about progress
-message("   Add indicator for sampled addresses")
+cat("\nAdd indicator for sampled addresses")
 
 # Add indicator for sampled addressed 
 # ('Yes' = sampled, 'No' = not sampled)
@@ -91,13 +93,10 @@ nrow(paf)
 
 ### *TOTAL SAMPLE* ----
 
-# Add message to inform user about progress
-message("   Total sample")
-
 ### 3 - Check sample size requirements ----
 
 # Add message to inform user about progress
-message("      Check sample size requirements")
+cat("\nCheck sample size requirements")
 
 # Compare sample size requirements with drawn sample
 contractor.sample.size.check <- check_sample_size(
@@ -108,7 +107,7 @@ contractor.sample.size.check <- check_sample_size(
 ### 4 - Check for previously sampled addresses ----
 
 # Add message to inform user about progress
-message("      Check for previously sampled addresses")
+cat("\nCheck for previously sampled addresses")
 
 # Import previously sampled and delivered UDPRNs
 udprn.qa <- delivered_udprn(sampling_year = syear,
@@ -117,62 +116,60 @@ udprn.qa <- delivered_udprn(sampling_year = syear,
 ### 5 - Mean SIMD for sample & sampling frame by local authority ----
 
 # Add message to inform user about progress
-message("      Mean SIMD for sample & sampling frame by local authority")
+cat("\nMean SIMD for sample & sampling frame by local authority")
 
-simd.qa <- check_mean_simd(total.sample, paf)
+simd.qa <- check_mean_simd(total.sample, paf, grouping_variable = la)
 
 ### 6 - Urban/rural classification ----
 
 # Add message to inform user about progress
-message("      Urban/rural classification")
+cat("\nUrban/rural classification")
 
 urbrur.la.qa <- check_urbrur(scjs.frameandmatchedsample)
 
 ### 7 - Check postcodes ----
 
 # Add message to inform user about progress
-message("      Check postcodes")
+cat("\nCheck postcodes")
 
 pcode <- check_postcodes(total.sample)
 
 ### 8 - Check business addresses ----
 
 # Add message to inform user about progress
-message("      Check business addresses")
+cat("\nCheck business addresses")
 
 business.qa <- check_businesses(sample = total.sample)
 
 ### 9 - Check multisize distribution ----
 
 # Add message to inform user about progress
-message("      Check multisize distribution")
+cat("\nCheck multisize distribution")
 
 multisize.qa <- check_multisize(sample = total.sample, paf = paf)
 
 ### *CONTRACTOR SAMPLE* ----
 
-# Add message to inform user about progress
-message("   Contractor sample")
-
 ### 9 - Check SIMD in contractor sample ----
 
 # Add message to inform user about progress
-message("      Check SIMD")
+cat("\nCheck SIMD")
 
 contractor.simd.qa <- check_contractor_simd(sample = contractor.sample, 
-                                            paf.simd = simd.qa[[2]])
+                                            paf.simd = simd.qa[[2]],
+                                            grouping_variable = la)
 
 ### 10 - Check business addresses in contractor sample ----
 
 # Add message to inform user about progress
-message("      Check business addresses in contractor sample")
+cat("\nCheck business addresses in contractor sample")
 
 check_contractor_businesses(contractor.sample)
 
 ### 11 - Check stream allocation in contractor sample ----
 
 # Add message to inform user about progress
-message("      Check stream allocation")
+cat("\nCheck stream allocation")
 
 contractor.stream.qa <- check_stream(sample = contractor.sample,
                                      grouping_variable = la)
@@ -186,7 +183,7 @@ contractor.stream.qa <- check_stream(sample = contractor.sample,
 ### 12 - Check data zones in contractor sample ----
 
 # Add message to inform user about progress
-message("      Check data zones")
+cat("\nCheck data zones")
 
 contractor.datazone.qa <- check_contractor_datazones(sample = contractor.sample,
                                                      dz = dz_info,
@@ -200,7 +197,7 @@ contractor.simdq.qa <- check_contractor_simdq(sample = contractor.sample,
 ### 14 - Check urbrur in contractor sample ----
 
 # Add message to inform user about progress
-message("      Check urbrur")
+cat("\nCheck urbrur")
 
 contractor.urbrur.qa <- check_contractor_urbrur(sample = contractor.sample,
                                                 previous.sample = contractor.sample.previous)

@@ -14,6 +14,9 @@
 # clear environment
 rm(list=ls())
 
+# Add message to inform user about progress
+cat(crayon::bold("\nExecute sampling script"))
+
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and functions and 
@@ -22,6 +25,9 @@ rm(list=ls())
 source(here::here("scripts", "00_setup.R"))
 
 ### 1 - Import files ---- 
+
+# Add message to inform user about progress
+cat("\nImport data")
 
 # Identify most recent used addresses file
 recent_usedaddresses <- most_recent_file(path = here("lookups"), 
@@ -48,16 +54,25 @@ shs.samplesize <- read.csv(shs.samplesize.path,
 
 ### 2 - Used addresses ---- 
 
+# Add message to inform user about progress
+cat("\nAdd metrics for active addresses")
+
 shs.sframe <- used_addresses(prev_samples = usedaddresses,
                paf = clean_paf)
 nrow(shs.sframe)
 
 ### 3 - Multiple occupancy  ---- 
 
+# Add message to inform user about progress
+cat("\nCreate multiple occupancy indicator")
+
 shs.sframe <- shs.sframe %>% multiple_occupancy()
 nrow(shs.sframe)
 
 ### 4 - Sampling ---- 
+
+# Add message to inform user about progress
+cat("\nDraw sample")
 
 shs.control <- c("dz11_urbrur2020",
                   "simd20rank",
@@ -80,6 +95,9 @@ shs.frameandmatchedsample <- shs.sframe %>%
 
 ### 5 - Draw reserve sample ---- 
 
+# Add message to inform user about progress
+cat("\nDraw reserve sample")
+
 # Draw stratified systematic sample
 # As the selection probability of some addresses is zero,
 # a warning message will be displayed when executing the code below.
@@ -98,6 +116,9 @@ shs.mainsample <- anti_join(x = shs.totalsample,
 nrow(shs.mainsample)
 
 ### 6 - Household condition ---- 
+
+# Add message to inform user about progress
+cat("\nDraw household condition sample")
 
 shs.contractorsample <- shs.mainsample %>%
   
@@ -121,9 +142,15 @@ nrow(shs.contractorsample)
 
 ### 7 - Prepare for export ----
 
+# Add message to inform user about progress
+cat("\nPrepare for export")
+
 shs.contractor.export <- shs.contractorsample %>% prepare_for_export()
 
 ### 8 - Post-processing ---- 
+
+# Add message to inform user about progress
+cat("\nPost-process data")
 
 # generate streams 1:4
 streams1 <- stream_allocation(1, 4)
@@ -152,6 +179,9 @@ shs.contractor.export <- shs.contractor.export %>%
 shs.contractor.export <- shs.contractor.export %>% selected_mo()
 
 ### 9 - Export sample  ----
+
+# Add message to inform user about progress
+cat("\nExport sample")
 
 # Code to export sampled addresses into output folder
 # Current date is automatically added to file name to avoid 

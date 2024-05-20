@@ -14,7 +14,7 @@
 rm(list=ls())
 
 # Add message to inform user about progress
-message("Execute used addresses script")
+cat(crayon::bold("\nExecute used addresses script"))
 
 ### 0 - Setup ----
 
@@ -26,7 +26,7 @@ source(here::here("scripts", "00_setup.R"))
 ### 1 - Import files ----
 
 # Add message to inform user about progress
-message("   Import data")
+cat("\nImport data")
 
 # Import all previously sampled address files and 
 # add column with file name
@@ -41,7 +41,7 @@ usedaddresses <-
 ### 2 - Process data ----
 
 # Add message to inform user about progress
-message("   Process data")
+cat("\nProcess data")
 
 # Mutate file name to name of survey and clean names
 usedaddresses <- usedaddresses %>%
@@ -68,7 +68,7 @@ usedaddresses <- usedaddresses %>%
 ### 3 - Export used addresses  ----
 
 # Add message to inform user about progress
-message("   Export used addresses")
+cat("\nExport used addresses")
 
 # Code to export used addresses into lookups folder
 write_rds(
