@@ -36,12 +36,18 @@ check_contractor_simdq <- function(sample, previous.sample){
   contractor.simdq.qa <- prev_cur_comp(current_df = contractor.la.simdq,
                                        previous_df = contractor.previous.la.simdq)
   
-  # Print warning if diff is <-5 or >5
+  # Print warning if diff is lower or greater than threshold
   {
-    if (any(contractor.simdq.qa %>% select(starts_with("diff")) < -5 |
-            contractor.simdq.qa %>% select(starts_with("diff")) > 5))
-    {stop(paste0("For at least one datazone, the percentage of occupied dwellings ",
-                 "in the sample is greater or lower than expected"))}
+    if (any(contractor.simdq.qa %>% 
+            select(starts_with("diff")) < ifelse(survey == "shes",
+                                                 -shes.simdq.threshold,
+                                                 -simdq.threshold) |
+            contractor.simdq.qa %>% 
+            select(starts_with("diff")) > ifelse(survey == "shes",
+                                                 shes.simdq.threshold,
+                                                 simdq.threshold) ))
+    {warning(paste0("For at least one local authority and SIMDQ rank,",
+                    "the difference between previous and current sample is greater than expected"))}
   }
   
   return(contractor.simdq.qa)

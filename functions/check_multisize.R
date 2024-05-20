@@ -35,9 +35,9 @@ check_multisize <- function(sample, paf){
     replace(is.na(.), 0) %>%
     mutate(diff = contractor_perc - paf_perc)
   
-  # Print warning if diff is <-2.5 or >2.5
+  # Print warning if diff is greater or lower than threshold
   {
-    if (min(multisize.qa$diff) < -2.5 | max(multisize.qa$diff) > 2.5)
+    if (min(multisize.qa$diff) < -paf_sample.threshold | max(multisize.qa$diff) > paf_sample.threshold)
     {stop(paste0("For at least one multisize category, the difference between ",
                  "PAF % and contractor sample % is greater than expected"))}
     }

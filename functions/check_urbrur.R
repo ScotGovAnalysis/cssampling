@@ -23,11 +23,18 @@ check_urbrur <- function(df){
     pivot_wider(names_from = selected, 
                 names_prefix = "selected_",
                 values_from = freq) %>%
-    mutate(diff = selected_No - selected_Yes)
+    mutate(across(starts_with("selected"), ~replace(., is.na(.), 0)),
+           diff = selected_No - selected_Yes)
   
-  # Print warning if diff is <-2.5 or >2.5
+  # Print warning if diff is too great
+  survey <- substring(deparse(substitute(df)), 1, 4)
+  ifelse(survey == "shes",
+         shes.urbrur.threshold,
+         paf_sample.threshold
+  )
+  
   {
-    if (min(urbrur.la.qa$diff) < -2.5 | max(urbrur.la.qa$diff) > 2.5)
+    if (min(urbrur.la.qa$diff) < -threshold | max(urbrur.la.qa$diff) > threshold)
     {stop(paste0("In at least one local authority, the difference in urbrur percentage ",
                  "between the sampled and non-sampled addresses is greater than expected"))}
     }

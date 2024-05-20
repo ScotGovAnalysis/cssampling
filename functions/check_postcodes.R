@@ -17,19 +17,16 @@ check_postcodes <- function(sample){
     count(postcode) %>% 
     arrange(desc(n))
   
-  # Check if any postcode has been sampled more than once and if so
+  # Check if any postcode has been sampled more than the threshold and if so
   # print warning
   {
-    if (head(pcode$n, 1) > 5)
-    {warning(paste0("At least one postcode has been sampled more than 5 times.",
+    if (head(pcode$n, 1) > ifelse(survey == "shes", 
+                                  shes.postcode.threshold,
+                                  postcode.threshold))
+    {warning(paste0("At least one postcode has been sampled more than anticipated.",
                     " Check Excel file to confirm these are all small postcodes."))}
     }
-  {
-    if (tail(pcode$n, 1) > 5 )
-    {warning(paste0("At least one postcode has been sampled more than 5 times.",
-                    " Check Excel file to confirm these are all small postcodes."))}
-  }
-  
+
   return(pcode)
   
 }

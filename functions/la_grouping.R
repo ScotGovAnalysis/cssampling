@@ -25,7 +25,7 @@ la_grouping <- function(df, grouping_variable) {
   # the grouping variable in each local authority and 
   # transpose the output
   df %>% 
-    group_by(la, !!!group) %>% 
+    group_by(la, !!group) %>% 
     summarise(n = n(),
               .groups = 'drop') %>%
     group_by(la) %>%
@@ -36,6 +36,7 @@ la_grouping <- function(df, grouping_variable) {
                                       "_"),
                 values_from = percent,
                 values_fill = list(percent = 0))  %>%
-    ungroup()
+    ungroup() %>%
+    select(la, ends_with(c("1", "2", "3", "4", "5", "6")))
 }
 

@@ -19,6 +19,7 @@ qa_export <- function(list_df, survey){
     
     sheet <- addWorksheet(wb, names(list_df[i]))
     data <- list_df[[i]]
+    name <- names(list_df[i])
     
     # loop through list of objects and write each in separate sheet
     
@@ -32,8 +33,9 @@ qa_export <- function(list_df, survey){
     
     # add conditional formatting to relevant columns
     
+    # diff ----
+
     # add colour scale to columns containing the word 'diff'
-    # range: -2.5 to 2.5
     
     if(any(grepl("^diff", colnames(data)))){
       
@@ -43,9 +45,44 @@ qa_export <- function(list_df, survey){
                           style = c("red", "green", "red"),
                           cols = diff, rows = (1:nrow(data)+1),
                           type = "colourScale",
-                          rule = c(-2.5, 0, 2.5))
+                          rule = c(-paf_sample.threshold, 0, paf_sample.threshold))
       }
-  
+    
+    # urbrur in SHeS ----
+    
+    if(grepl("urbrur", name) == T & 
+       survey == "shes"){
+      
+      diff <- grep("^diff", colnames(data))
+      
+      conditionalFormatting(wb = wb, sheet = sheet,
+                            style = c("red", "green", "red"),
+                            cols = diff, rows = (1:nrow(data)+1),
+                            type = "colourScale",
+                            rule = c(-shes.urbrur.threshold, 0, shes.urbrur.threshold))
+    }
+    
+    # SIMDQ ----
+    
+    if(grepl("simdq", name) == T){
+      
+      diff <- grep("^diff", colnames(data))
+      
+      conditionalFormatting(wb = wb, sheet = sheet,
+                            style = c("red", "green", "red"),
+                            cols = diff, rows = (1:nrow(data)+1),
+                            type = "colourScale",
+                            rule = c(ifelse(survey == "shes",
+                                            -shes.simdq.threshold,
+                                            -simdq.threshold), 
+                                     0, 
+                                     ifelse(survey == "shes",
+                                            shes.simdq.threshold,
+                                            simdq.threshold)))
+    }
+    
+    # check ----
+    
   redstyle <- createStyle(bgFill = "#FF0000")
   greenstyle <- createStyle(bgFill = "#00FF00")
   
@@ -55,18 +92,29 @@ qa_export <- function(list_df, survey){
   if(any(grepl("^check", colnames(data)))){
     
     check <- grep("^check", colnames(data))
+    shs.check <- list(paste0(" <= ", shs.stream.threshold),
+                      paste0(" > ", shs.stream.threshold))
+    scjs.check <- list(paste0(" <= ", scjs.stream.threshold),
+                       paste0(" > ", scjs.stream.threshold))
+    
     conditionalFormatting(wb = wb, sheet = sheet,
                           cols = check, rows = 2:(nrow(data)+1),
                           type = "expression",
-                          rule = " <= 1",
+                          rule = ifelse(survey == "shs",
+                                        shs.check[[1]],
+                                        scjs.check[[1]]),
                           style = greenstyle)
     
     conditionalFormatting(wb = wb, sheet = sheet,
                           cols = check, rows = 2:(nrow(data)+1),
                           type = "expression",
-                          rule = " > 1",
+                          rule = ifelse(survey == "shs",
+                                        shs.check[[2]],
+                                        scjs.check[[2]]),
                           style = redstyle)
   }
+  
+  # overlap ----
   
   # add red/green colouring to columns containing the word 'overlap'
   # green if 'no'; otherwise red
@@ -86,6 +134,8 @@ qa_export <- function(list_df, survey){
                           rule = ' == "no"',
                           style = redstyle)
   }
+  
+  # udprn ----
   
   # add red/green colouring to columns containing the word 'udprn'
   # red if udprn isn't 0 (i.e., udprn has been previously sampled)

@@ -35,7 +35,7 @@ delivered_udprn <- function(sampling_year, filepath){
   files_del
   
   # Import all delivered UDPRNs
-  prev.samples <- lapply(files_del, import_multiple_files_csv)
+  prev.samples <- pblapply(files_del, import_multiple_files_csv)
   prev.samples <- do.call("rbind", prev.samples)
   
   # Check if any of the recently sampled UDPRNs has been previously delivered

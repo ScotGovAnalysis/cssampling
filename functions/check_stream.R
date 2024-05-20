@@ -42,5 +42,23 @@ check_stream <- function(sample, grouping_variable,
            check = max-min) %>%
     select(-c(max, min))
   
+  # perform check if survey is SCJS
+  if(survey == "scjs") {
+    # check streams are equally distributed per local authority
+    {
+      if(!all(contractor.stream.qa$check %in% c(0:scjs.stream.threshold)))
+      {warning("Streams are not equally distributed across local authorities.")}
+    }
+  }
+  
+  # perform check if survey is SHS
+  if(survey == "shs") {
+    # check streams are equally distributed per local authority
+    {
+      if(!all(contractor.stream.qa$check < shs.stream.threshold))
+      {warning("Streams are not equally distributed across local authorities.")}
+    }
+  }
+  
   return(contractor.stream.qa)
 }

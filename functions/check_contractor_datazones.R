@@ -45,9 +45,10 @@ check_contractor_datazones <- function(sample, dz, hh.estimates){
            diff = perc_hh - perc_sample) %>%
     ungroup()
   
-  # Print warning if diff is <-2.5 or >2.5
+  # Print warning if diff is lower or greater than threshold
   {
-    if (min(contractor.datazone.qa$diff) < -2.5 | max(contractor.datazone.qa$diff) > 2.5)
+    if (min(contractor.datazone.qa$diff) < -paf_sample.threshold | 
+        max(contractor.datazone.qa$diff) > paf_sample.threshold)
     {stop(paste0("For at least one datazone, the percentage of occupied dwellings ",
                  "in the sample is greater or lower than expected"))}
     }

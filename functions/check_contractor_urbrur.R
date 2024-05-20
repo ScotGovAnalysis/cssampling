@@ -19,7 +19,7 @@
 check_contractor_urbrur <- function(sample, previous.sample){
   
   contractor.la.urbrur <- la_grouping(df = sample,
-                                      grouping_variable = dz11_urbrur2020)
+                                      grouping_variable = dz11_urbrur2020) 
   
   contractor.previous.la.urbrur <- la_grouping(df = previous.sample,
                                                grouping_variable = dz11_urbrur2020)
@@ -27,12 +27,19 @@ check_contractor_urbrur <- function(sample, previous.sample){
   contractor.urbrur.la.qa <- prev_cur_comp(current_df = contractor.la.urbrur,
                                            previous_df = contractor.previous.la.urbrur)
   
-  # Print warning if diff is <-2.5 or >2.5
+  # Print warning if diff is greater or lower than the threshold
   {
-    if (any(contractor.urbrur.la.qa %>% select(starts_with("diff")) < -2.5 |
-            contractor.urbrur.la.qa %>% select(starts_with("diff")) > 2.5))
-    {stop(paste0("For at least one datazone, the percentage of occupied dwellings ",
-                 "in the sample is greater or lower than expected"))}
+    if (any(contractor.urbrur.la.qa %>% 
+            select(starts_with("diff")) < ifelse(survey == "shes",
+                                                 -shes.urbrur.threshold,
+                                                 -paf_sample.threshold) |
+            contractor.urbrur.la.qa %>% 
+            select(starts_with("diff")) > ifelse(survey == "shes",
+                                                shes.urbrur.threshold,
+                                                paf_sample.threshold)))
+    {warning(paste0("For at least one local authority and ",
+                    "urban rural classification, the difference between ",
+                 "previous and current sample is greater or lower than expected"))}
   }
   
   # Compare number and percentages of sampled addresses per urbrur 
@@ -48,11 +55,11 @@ check_contractor_urbrur <- function(sample, previous.sample){
                                         contractor.previous.urbrur) %>%
     select(-diff.n)
   
-  # Print warning if diff is <-2.5 or >2.5
+  # Print warning if diff is greater or lower than threshold
   {
-    if (any(contractor.urbrur.qa %>% select(starts_with("diff")) < -2.5 |
-            contractor.urbrur.qa %>% select(starts_with("diff")) > 2.5))
-    {stop(paste0("For at least one urban rural classification, the percentage of ",
+    if (any(contractor.urbrur.qa %>% select(starts_with("diff")) < -paf_sample.threshold |
+            contractor.urbrur.qa %>% select(starts_with("diff")) > paf_sample.threshold))
+    {warning(paste0("For at least one urban rural classification, the percentage of ",
                  "sampled addresses differs considerably from ",
                  "last year's sample"))}
     }

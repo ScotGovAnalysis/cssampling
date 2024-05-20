@@ -26,10 +26,11 @@ check_contractor_simd <- function(sample, paf.simd, grouping_variable){
     select(-c(median_paf, n_paf)) %>%
     mutate(diff = mean_contractor/mean_paf-1)
   
-  # Print warning if diff is <-2.5 or >2.5
+  # Print warning if diff is lower or greater than threshold
   {
-    if (min(contractor.simd.qa$diff) < -2.5 | max(contractor.simd.qa$diff) > 2.5)
-    {stop(paste0("For at least one local authority, the mean SIMD difference ",
+    if (min(contractor.simd.qa$diff) < -paf_sample.threshold | 
+        max(contractor.simd.qa$diff) > paf_sample.threshold)
+    {warning(paste0("For at least one local authority, the mean SIMD difference ",
                  "between PAF and contractor sample is greater than expected"))}
     }
   
