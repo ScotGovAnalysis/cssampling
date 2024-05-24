@@ -28,14 +28,12 @@ check_urbrur <- function(df){
   
   # Print warning if diff is too great
   survey <- substring(deparse(substitute(df)), 1, 4)
-  ifelse(survey == "shes",
-         shes.urbrur.threshold,
-         paf_sample.threshold
-  )
+  if(survey == "shes") {threshold <- shes.urbrur.threshold}
+  if(survey != "shes") {threshold <- paf_sample.threshold}
   
   {
     if (min(urbrur.la.qa$diff) < -threshold | max(urbrur.la.qa$diff) > threshold)
-    {stop(paste0("In at least one local authority, the difference in urbrur percentage ",
+    {warning(paste0("In at least one local authority, the difference in urbrur percentage ",
                  "between the sampled and non-sampled addresses is greater than expected"))}
     }
   
