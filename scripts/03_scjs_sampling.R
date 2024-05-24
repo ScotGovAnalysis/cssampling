@@ -14,19 +14,19 @@
 # clear environment
 rm(list=ls())
 
-# Add message to inform user about progress
-cat(crayon::bold("\nExecute sampling script"))
-
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and functions and 
 # executes the config.R script.
 source(here::here("scripts", "00_setup.R"))
 
+# Add message to inform user about progress
+message(title("\nExecute sampling script"))
+
 ### 1 - Import files ---- 
 
 # Add message to inform user about progress
-cat("\nImport data")
+message(normal("Import data"))
 
 # Identify most recent used addresses file
 recent_usedaddresses <- most_recent_file(path = here("lookups"), 
@@ -55,7 +55,7 @@ scjs.samplesize <- read.csv(scjs.samplesize.path,
 ### 2 - Used addresses ---- 
 
 # Add message to inform user about progress
-cat("\nAdd metrics for active addresses")
+message(normal("Add metrics for active addresses"))
 
 scjs.sframe <- used_addresses(prev_samples = usedaddresses,
                              paf = clean_paf)
@@ -64,7 +64,7 @@ nrow(scjs.sframe)
 ### 3 - Multiple occupancy  ---- 
 
 # Add message to inform user about progress
-cat("\nCreate multiple occupancy indicator")
+message(normal("Create multiple occupancy indicator"))
 
 scjs.sframe <- scjs.sframe %>% multiple_occupancy()
 nrow(scjs.sframe)
@@ -72,7 +72,7 @@ nrow(scjs.sframe)
 ### 4 - Sampling ---- 
 
 # Add message to inform user about progress
-cat("\nDraw sample")
+message(normal("Draw sample"))
 
 scjs.control <- c("dz11_urbrur2020",
                   "simd20rank",
@@ -96,7 +96,7 @@ scjs.frameandmatchedsample <- scjs.sframe %>%
 ### 5 - Draw reserve sample ---- 
 
 # Add message to inform user about progress
-cat("\nDraw reserve sample")
+message(normal("Draw reserve sample"))
 
 # Draw stratified systematic sample
 scjs.reservesample <- scjs.totalsample %>% 
@@ -115,14 +115,14 @@ nrow(scjs.contractorsample)
 ### 6 - Prepare for export ----
 
 # Add message to inform user about progress
-cat("\nPrepare for export")
+message(normal("Prepare for export"))
 
 scjs.contractor.export <- scjs.contractorsample %>% prepare_for_export()
 
 ### 7 - Post-processing ---- 
 
 # Add message to inform user about progress
-cat("\nPost-process data")
+message(normal("Post-process data"))
 
 # generate streams 1:12
 streams <- stream_allocation(1, 12)
@@ -141,7 +141,7 @@ scjs.contractor.export <- scjs.contractor.export %>% selected_mo()
 # overwriting existing files
 
 # Add message to inform user about progress
-cat("\nExport sample")
+message(normal("Export sample"))
 
 export_rds(scjs.totalsample)
 

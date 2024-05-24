@@ -14,9 +14,6 @@
 # clear environment
 rm(list=ls())
 
-# Add message to inform user about progress
-cat(crayon::bold("\nExecute sampling script"))
-
 ### 0 - Setup ----
 
 # Run setup script which loads all required packages and 
@@ -24,10 +21,13 @@ cat(crayon::bold("\nExecute sampling script"))
 
 source(here::here("scripts", "00_setup.R"))
 
+# Add message to inform user about progress
+message(title("Execute sampling script"))
+
 ### 1 - Import files ---- 
 
 # Add message to inform user about progress
-cat("\nImport data")
+message(normal("Import data"))
 
 # Identify most recent used addresses file
 recent_usedaddresses <- most_recent_file(path = here("lookups"), 
@@ -64,7 +64,7 @@ biomodsframe <- read.csv(biomod.path,
 ### 2 - Used addresses ---- 
 
 # Add message to inform user about progress
-cat("\nAdd metrics for active addresses")
+message(normal("Add metrics for active addresses"))
 
 shes.sframe <- used_addresses(prev_samples = usedaddresses,
                              paf = clean_paf)
@@ -73,7 +73,7 @@ nrow(shes.sframe)
 ### 3 - Cluster size ---- 
 
 # Add message to inform user about progress
-cat("\nAdd clusters")
+message(normal("Add clusters"))
 
 shes.sframe <- shes.sframe %>% 
   
@@ -93,7 +93,7 @@ nrow(shes.sframe)
 ### 4 - Multiple occupancy  ---- 
 
 # Add message to inform user about progress
-cat("\nCreate multiple occupancy indicator")
+message(normal("Create multiple occupancy indicator"))
 
 shes.sframe <- shes.sframe %>% multiple_occupancy()
 nrow(shes.sframe)
@@ -101,7 +101,7 @@ nrow(shes.sframe)
 ### 5 - Sampling ---- 
 
 # Add message to inform user about progress
-cat("\nDraw sample")
+message(normal("Draw sample"))
 
 shes.control <- c("dz11_urbrur2020",
                   "average_simd20_rank",
@@ -123,7 +123,7 @@ shes.frameandmatchedsample <- shes.sframe %>%
 ### 6 - Draw reserve sample ---- 
 
 # Add message to inform user about progress
-cat("\nDraw reserve sample")
+message(normal("Draw reserve sample"))
 
 # calculate total reserve sample size
 shes.samplesize <- shes.samplesize %>% 
@@ -149,7 +149,7 @@ nrow(shes.contractorsample)
 ### 7 - Draw biological module  ---- 
 
 # Add message to inform user about progress
-cat("\nDraw biological sample")
+message(normal("Draw biological sample"))
 
 # select which intermediate geographies (data zones in the islands) 
 # will be subject to the biological module
@@ -179,7 +179,7 @@ shes.biomod.frameandmatchedsample <- biomod %>%
 ### 8 - Draw child sample ---- 
 
 # Add message to inform user about progress
-cat("\nDraw child sample")
+message(normal("Draw child sample"))
 
 # Split the sample into child sample frame and islands. 
 # The islands do not have a child boost and therefore are not 
@@ -203,7 +203,7 @@ nrow(child.mainsample)
 ### 9 - Contractor sample ---- 
 
 # Add message to inform user about progress
-cat("\nCombine samples")
+message(normal("Combine samples"))
 
 # Recombine drawn sample with the islands sample and add the child_boost, 
 # main and adult_boost flags
@@ -256,14 +256,14 @@ shes.full.contractorsample %>%
 ### 10 - Prepare for export ----
 
 # Add message to inform user about progress
-cat("\nPrepare for export")
+message(normal("Prepare for export"))
 
 shes.contractorsample.export <- prepare_for_export(shes.full.contractorsample)
 
 ### 11 - Export sample  ----
 
 # Add message to inform user about progress
-cat("\nExport sample")
+message(normal("Export sample"))
 
 # Code to export sampled addresses into output folder
 # Current date is automatically added to file name to avoid 

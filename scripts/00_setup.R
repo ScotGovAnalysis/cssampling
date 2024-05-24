@@ -20,6 +20,7 @@ library(openxlsx)
 library(readxl)
 library(rlang)
 library(pbapply)
+library(crayon)
 
 ### 2 - Load functions from functions folder of Rproject ----
 
@@ -82,3 +83,9 @@ paf_v <- str_match(infilenm.path, "\\_\\s*(.*?)\\s*\\.txt")[, 2]
 # get file names of previous cleaned PAFs
 paf_list <- list.files(path = here("lookups"),
                        pattern = "paf")
+
+### 7 - Message style ----
+
+title <- black $ bold
+
+normal <- black
