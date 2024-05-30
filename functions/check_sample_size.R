@@ -16,7 +16,7 @@ check_sample_size <- function(df, sample.size){
   contractor.sample.size.check <- contractor.sample %>% 
     group_by(la_code) %>% 
     summarise(drawn_n = n()) %>%
-    merge(sample.size, by = "la_code") %>%
+    left_join(sample.size, by = "la_code") %>%
     select(la_code, drawn_n, contractor_n) %>%
     mutate(diff = contractor_n - drawn_n)
   

@@ -29,17 +29,20 @@ check_multisize <- function(sample, paf){
     mutate(cum_sum = cumsum(paf_n),
            cum_perc = cumsum(paf_perc))
   
-  multisize.qa <- merge(contractor.multisize[,1:3], 
+  multisize.qa <- full_join(contractor.multisize[,1:3], 
                         total.multisize[,1:3],
-                        by = "multisize", all = TRUE) %>%
+                        by = "multisize") %>%
+    arrange(multisize) %>%
     replace(is.na(.), 0) %>%
     mutate(diff = contractor_perc - paf_perc)
   
   # Print warning if diff is greater or lower than threshold
   {
-    if (min(multisize.qa$diff) < -paf_sample.threshold | max(multisize.qa$diff) > paf_sample.threshold)
-    {stop(paste0("For at least one multisize category, the difference between ",
-                 "PAF % and contractor sample % is greater than expected"))}
+    if (min(multisize.qa$diff) < -paf_sample.threshold | 
+        max(multisize.qa$diff) > paf_sample.threshold)
+    {warning(paste0("For at least one multisize category, ",
+                 "the difference between PAF % and contractor sample %",
+                 "is greater than expected"))}
     }
   
   return(multisize.qa)

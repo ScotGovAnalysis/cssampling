@@ -28,12 +28,11 @@ check_contractor_datazones <- function(sample, dz, hh.estimates){
     ungroup() %>%
     
     # add local authority information
-    merge(dz,
-          by.y = "dz11",
-          by.x = "datazone") %>%
+    left_join(dz,
+          by = c("datazone" = "dz11")) %>%
     
     # add occupied dwellings
-    merge(hh.estimates, 
+    left_join(hh.estimates, 
           by = "datazone")%>% 
     
     # group by local authority

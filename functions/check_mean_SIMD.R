@@ -38,7 +38,7 @@ check_mean_simd <- function(total.sample, paf, grouping_variable) {
               .groups = 'drop')
   
   # Merge SIMD statistics of PAF and sample
-  simd.qa <- merge(sample.simd, paf.simd, 
+  simd.qa <- left_join(sample.simd, paf.simd, 
                    by = as_name(group)) %>%
     mutate(nsampnpaf = n_sample / n_paf,
            overlap = ifelse(lower.ci_sample < mean_paf & upper.ci_sample > mean_paf,

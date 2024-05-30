@@ -22,7 +22,7 @@ check_contractor_simd <- function(sample, paf.simd, grouping_variable){
     summarise(n = n(),
               mean_contractor = mean(simd20rank),
               .groups = 'drop')  %>%
-    merge(paf.simd, by = as_name(group)) %>%
+    left_join(paf.simd, by = as_name(group)) %>%
     select(-c(median_paf, n_paf)) %>%
     mutate(diff = mean_contractor/mean_paf-1)
   

@@ -113,8 +113,8 @@ rawpaf <- rawpaf %>%
 nrow(rawpaf)
 
 # Merge multiocc variable with unique udprn values
-paf <- merge(x = rawpaf, y = mo,
-             by = "udprn", all.x = TRUE) %>%
+paf <- left_join(x = rawpaf, y = mo,
+             by = "udprn") %>%
   select(-multi_occupancy)
 
 ### 4 - Remove dead postcodes  ----
@@ -148,8 +148,8 @@ alive <- alive %>%
 dead <- alive %>% 
   select(-postcod2) %>%
   rename_at('postcod3', ~'postcod2') %>%
-  merge(x = dead,
-        by = c("postcod1", "postcod2"), all.x = TRUE) %>% 
+  right_join(y = dead,
+        by = c("postcod1", "postcod2"), relationship = "many-to-many") %>% 
   mutate(date_of_deletion = ifelse(!is.na(postcode.y), NA, date_of_deletion.x),
          postcode = postcode.x) %>%
   select(postcod1, postcod2, postcode, date_of_deletion)
@@ -167,12 +167,12 @@ deadpconpaf <- paf %>%
          postcod2 = sapply(str_split(postcode, " "), 
                            function(x) x[2])) %>%
   select(postcod1, postcod2, print_address, udprn) %>%
-  merge(y = dead, by = c("postcod1", "postcod2"))
+  inner_join(y = dead, by = c("postcod1", "postcod2"))
 nrow(deadpconpaf)
 
 # Merges PAF with udprns known to have dead postcodes 
-deadpconpaf1 <- merge(x = paf, y = deadpconpaf,
-                      by = "udprn", all.y = TRUE)
+deadpconpaf1 <- right_join(x = paf, y = deadpconpaf,
+                      by = "udprn")
 
 # deadpconpaf1 should be empty
 # stop if this isn't the case
