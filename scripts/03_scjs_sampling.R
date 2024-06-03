@@ -42,10 +42,6 @@ recent_paf <- paf_list[grepl(paf_v, paf_list,
 # Import cleaned PAF
 clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
 
-# Import SIMD ranks for datazones
-dz11_simd20 <- haven::read_sas(dz_simd.path) %>%
-  clean_names_modified()
-
 # Import sample size file
 scjs.samplesize <- read.csv(scjs.samplesize.path, 
                                     header = TRUE, na = "") %>%

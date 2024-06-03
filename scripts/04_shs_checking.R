@@ -61,10 +61,6 @@ dz_info <- haven::read_sas(dz.path) %>%
 contractor.sample.previous <- read.csv(shs.contractor.sample.previous.path) %>%
   clean_names_modified()
 
-# Import SIMD ranks for datazones
-dz11_simd20 <- haven::read_sas(dz_simd.path) %>%
-  clean_names_modified()
-
 # Import household estimates by datazone
 last_sheet <- length(excel_sheets(hh_dz.path))
 hh.est.dz <- suppressWarnings(read_excel(hh_dz.path, 

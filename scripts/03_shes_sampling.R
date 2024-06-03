@@ -42,10 +42,6 @@ recent_paf <- most_recent_file(path = here("lookups"), pattern = "paf")
 # Import cleaned PAF
 clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
 
-# Import SIMD ranks for datazones
-dz11_simd20 <- haven::read_sas(dz_simd.path) %>%
-  clean_names_modified()
-
 # Import sample size file
 shes.samplesize <- read.csv(shes.samplesize.path, 
                                    header = TRUE, na = "") %>%
@@ -81,7 +77,7 @@ shes.sframe <- shes.sframe %>%
   select(-contains("shes_y")) %>%
   
   # add SHeS cluster information
-  left_join(shes_clusters) %>%
+  left_join(shes_clusters, by = "dz11") %>%
   
   # create 'shes_clustersize' column based on shes.surveysweep
   mutate(across(
