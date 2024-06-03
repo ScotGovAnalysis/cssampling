@@ -42,14 +42,18 @@ recent_paf <- most_recent_file(path = here("lookups"), pattern = "paf")
 # Import cleaned PAF
 clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
 
+# Import SIMD ranks for datazones
+dz11_simd20 <- haven::read_sas(dz_simd.path) %>%
+  clean_names_modified()
+
 # Import sample size file
 shes.samplesize <- read.csv(shes.samplesize.path, 
-                                   header = TRUE, na = "") %>%
+                            header = TRUE, na = "") %>%
   clean_names_modified()
 
 # Import SHeS cluster file
 shes_clusters <- read.csv(shes.clusters.path, 
-                                    header = TRUE, na = "") %>%
+                          header = TRUE, na = "") %>%
   clean_names_modified()
 
 # import biomod file
@@ -63,7 +67,7 @@ biomodsframe <- read.csv(biomod.path,
 message(normal("Add metrics for active addresses"))
 
 shes.sframe <- used_addresses(prev_samples = usedaddresses,
-                             paf = clean_paf)
+                              paf = clean_paf)
 nrow(shes.sframe)
 
 ### 3 - Cluster size ---- 
@@ -77,7 +81,8 @@ shes.sframe <- shes.sframe %>%
   select(-contains("shes_y")) %>%
   
   # add SHeS cluster information
-  left_join(shes_clusters, by = "dz11") %>%
+  left_join(shes_clusters,
+            by = join_by(dz11, simd20rank)) %>%
   
   # create 'shes_clustersize' column based on shes.surveysweep
   mutate(across(
@@ -155,9 +160,9 @@ biomod <- biomodsframe %>% filter(stream == shes.biomodstream)
 # Draw stratified systematic sample
 
 biomod.control <- c("health_board",
-                   "local_authority",
-                   "ur20",
-                   "average_simd20_rank")
+                    "local_authority",
+                    "ur20",
+                    "average_simd20_rank")
 
 biomodsample <- sampling(df = biomod,
                          stratum = "stream",
@@ -166,8 +171,8 @@ biomodsample <- sampling(df = biomod,
                                     times = nrow(biomod)),
                          control = biomod.control)
 
-shes.biomod.frameandmatchedsample <- biomod %>% 
-  left_join(biomodsample) %>%
+shes.biomod.frameandmatchedsample <- suppressMessages(biomod %>% 
+                                                        left_join(biomodsample)) %>%
   mutate(biomod = ifelse(is.na(prob) == TRUE, 0, 1)) %>%
   select(-c(prob, stratum)) %>%
   arrange(health_board, local_authority, ur20, average_simd20_rank)
@@ -211,7 +216,10 @@ shes.full.contractorsample <- child.mainsample %>%
          core = 0) %>%
   
   # merge child sample with whole contractor sample
-  right_join(shes.contractorsample) %>%
+  right_join(shes.contractorsample,
+             by = join_by(udprn),
+             suffix = c('.x', '')) %>%
+  select(-contains(".x")) %>%
   
   # replace NAs in child_boost flag with 0
   # (NAs were introduced for addresses who appeared in the whole contractor 
@@ -245,7 +253,8 @@ shes.full.contractorsample %>%
   count() %>% 
   pivot_wider(names_from = sample_type, 
               id_cols = la_code, 
-              values_from = n) %>%
+              values_from = n,
+              values_fill = 0) %>%
   adorn_totals("row") %>%
   adorn_totals("col")
 
