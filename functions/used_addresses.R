@@ -32,6 +32,10 @@ used_addresses <- function(prev_samples, paf){
     mutate(activeflag = ifelse(is.na(activeflag) == TRUE, 
                                1, activeflag)) %>%
     
+    # Merge with SIMD ranks
+    left_join(dz11_simd20,
+              by = join_by(dz11, simd20rank)) %>%
+    
     # Compute percentage and number of active addresses
     group_by(dz11) %>% 
     mutate(pactive = mean(activeflag),

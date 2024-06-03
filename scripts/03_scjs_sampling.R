@@ -47,6 +47,9 @@ scjs.samplesize <- read.csv(scjs.samplesize.path,
                                     header = TRUE, na = "") %>%
   clean_names_modified()
 
+# Import SIMD ranks for datazones
+dz11_simd20 <- haven::read_sas(dz_simd.path) %>%
+  clean_names_modified()
 
 ### 2 - Used addresses ---- 
 
