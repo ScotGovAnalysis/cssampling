@@ -27,10 +27,6 @@ qa_export <- function(list_df, survey){
             sheet = sheet,
             x = data)
     
-    # set column width to auto to ensure everything can be read
-    
-    setColWidths(wb, sheet, cols = 1:ncol(data), widths = "auto")
-    
     # add conditional formatting to relevant columns
     
     # diff ----
