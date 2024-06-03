@@ -133,7 +133,10 @@ shs.contractorsample <- shs.mainsample %>%
   mutate(houseconditionflag = 1) %>%
   
   # Merge with main sample
-  right_join(shs.mainsample) %>%
+  right_join(shs.mainsample,
+             by = join_by(udprn),
+             suffix = c('', '.y')) %>%
+  select(-contains('.y')) %>%
   
   # Replace NAs in houseconditionflag with 0
   mutate(houseconditionflag = replace_na(houseconditionflag, 0))
