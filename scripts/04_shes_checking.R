@@ -249,7 +249,8 @@ qa <- list(contractor.sample = contractor.sample,
            contractor.biomod = contractor.biomod.qa,
            contractor.datazone = contractor.datazone.qa,
            contractor.simdq.la = contractor.simdq.qa,
-           contractor.urbrur = contractor.urbrur.qa[[2]])
+           contractor.urbrur = contractor.urbrur.qa[[2]],
+           contractor.urbrur.la = contractor.urbrur.qa[[1]])
 
 # Export to Excel
 

@@ -197,3 +197,7 @@ postcode.threshold <- VALUE
 
 # Acceptable number of SHeS samples per postcode
 shes.postcode.threshold <- VALUE
+
+# % difference between PAF and sample AND previous and current sample
+# for urban/rural in SHeS
+shes.urbrur.threshold <- VALUE

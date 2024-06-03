@@ -27,11 +27,15 @@ check_contractor_urbrur <- function(sample, previous.sample){
                                            previous_df = contractor.previous.la.urbrur)
   
   # Print warning if diff is greater or lower than the threshold
-  if(survey != "shes") {
+  {
     if (any(contractor.urbrur.la.qa %>% 
-            select(starts_with("diff")) < -paf_sample.threshold |
+            select(starts_with("diff")) < ifelse(survey == "shes",
+                                                 -shes.urbrur.threshold,
+                                                 -paf_sample.threshold) |
             contractor.urbrur.la.qa %>% 
-            select(starts_with("diff")) > paf_sample.threshold))
+            select(starts_with("diff")) > ifelse(survey == "shes",
+                                                shes.urbrur.threshold,
+                                                paf_sample.threshold)))
     {warning(paste0("For at least one local authority and ",
                     "urban rural classification, the difference between ",
                  "previous and current sample is greater or lower than expected"))}
