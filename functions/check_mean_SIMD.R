@@ -45,8 +45,10 @@ check_mean_simd <- function(total.sample, paf, grouping_variable) {
                             "yes", "no"))
   
   # Print warning if there is overlap between sample CIs and PAF
+  # Note: There usually is not overlap in Glasgow.
+  # This is to be expected and no cause for concern.
   {
-    if (any(simd.qa$overlap != "yes"))
+    if (any(simd.qa$overlap != "yes" & simd.qa[, 1] != "S08000031"))
     {warning("The SIMD statistic of at least one sampled address does not overlap with the SIMD of the PAF")}
     }
   

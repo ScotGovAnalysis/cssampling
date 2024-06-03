@@ -22,7 +22,7 @@ merge_frame_sample <- function(sample_frame, totalsample) {
   left_join(totalsample,
             by = join_by(udprn),
             suffix = c('', '.y')) %>%
-    select(-contains("")) %>%
+    select(-contains('.y')) %>%
   arrange(la_code, dz11_urbrur2020, simd20rank, postcode, 
           print_address)
 }
