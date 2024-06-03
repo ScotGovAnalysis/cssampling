@@ -24,15 +24,12 @@ check_urbrur <- function(df){
                 names_prefix = "selected_",
                 values_from = freq) %>%
     mutate(across(starts_with("selected"), ~replace(., is.na(.), 0)),
-           diff = selected_No - selected_Yes)
+           diff = selected_No - selected_Yes) %>%
+    select(-contains("_NA"))
   
   # Print warning if diff is too great
-  survey <- substring(deparse(substitute(df)), 1, 4)
-  if(survey == "shes") {threshold <- shes.urbrur.threshold}
-  if(survey != "shes") {threshold <- paf_sample.threshold}
-  
   {
-    if (min(urbrur.la.qa$diff) < -threshold | max(urbrur.la.qa$diff) > threshold)
+    if (min(urbrur.la.qa$diff) < -paf_sample.threshold | max(urbrur.la.qa$diff) > paf_sample.threshold)
     {warning(paste0("In at least one local authority, the difference in urbrur percentage ",
                  "between the sampled and non-sampled addresses is greater than expected"))}
     }

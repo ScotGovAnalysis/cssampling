@@ -86,7 +86,8 @@ message(normal("Add indicator for sampled addresses"))
 # Add indicator for sampled addressed 
 # ('Yes' = sampled, 'No' = not sampled)
 shes.frameandmatchedsample <- shes.frameandmatchedsample %>%
-  mutate(selected = ifelse(is.na(stratum) != TRUE, "Yes", "No"))
+  mutate(selected = ifelse(is.na(stratum) != TRUE, "Yes", 
+                           ifelse(totalsize > 0 , "No", NA)))
 
 # Subset sample
 total.sample <- shes.frameandmatchedsample %>% filter(selected == "Yes")
@@ -248,8 +249,7 @@ qa <- list(contractor.sample = contractor.sample,
            contractor.biomod = contractor.biomod.qa,
            contractor.datazone = contractor.datazone.qa,
            contractor.simdq.la = contractor.simdq.qa,
-           contractor.urbrur = contractor.urbrur.qa[[2]],
-           contractor.urbrur.la = contractor.urbrur.qa[[1]])
+           contractor.urbrur = contractor.urbrur.qa[[2]])
 
 # Export to Excel
 
