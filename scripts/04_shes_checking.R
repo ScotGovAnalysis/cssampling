@@ -202,6 +202,25 @@ table(shes.biomod.frameandmatchedsample$health_board,
 
 shes.biomod.frameandmatchedsample %>% count(health_board)
 
+### 13 - Check urban/rural by core in contractor sample ----
+
+core.qa <- contractor.sample %>%
+  filter(core == 1) %>%
+  group_by(la, sample_type) %>%
+  summarise(mean = mean(dz11_urbrur2020),
+            .groups = "drop") %>%
+  pivot_wider(names_from = sample_type,
+              values_from = mean) %>%
+  ungroup() %>%
+  mutate(diff = .[[3]] - .[[2]])
+
+if(any(core.qa$diff < -paf_sample.threshold | core.qa$diff > paf_sample.threshold)){
+  warning(print(paste0("For at least one local authority,",
+                       "the difference in urban/rural classification",
+                       "between core bio and core non-bio",
+                       "is greater than expected")))
+}
+
 ### 12 - Check data zones in contractor sample ----
 
 # Add message to inform user about progress
@@ -250,7 +269,8 @@ qa <- list(contractor.sample = contractor.sample,
            contractor.datazone = contractor.datazone.qa,
            contractor.simdq.la = contractor.simdq.qa,
            contractor.urbrur = contractor.urbrur.qa[[2]],
-           contractor.urbrur.la = contractor.urbrur.qa[[1]])
+           contractor.urbrur.la = contractor.urbrur.qa[[1]],
+           contractor.urbrur.core = core.qa)
 
 # Export to Excel
 

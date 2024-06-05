@@ -25,7 +25,7 @@ survey <- "shs"
 source(here::here("scripts", "00_setup.R"))
 
 # Add message to inform user about progress
-cat(crayon::bold("\nExecute checking script"))
+message(title("Execute checking script"))
 
 ### 1 - Import data ---- 
 

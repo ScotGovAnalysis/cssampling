@@ -47,7 +47,8 @@ rawpaf <-  read_csv(infilenm.path,
                                    Locality, Town, Postcode, PrintAddress,
                                    Multi_occupancy, CouncilArea, UDPRN,
                                    YCOORD, XCOORD, "2011Datazone", LACode, 
-                                   UPRN, CouncilTaxBand)) %>%
+                                   UPRN, CouncilTaxBand),
+                    show_col_types = FALSE) %>%
   clean_names_modified() %>%
   mutate(datazone = substr(x2011datazone, 1, 9),
          udprn = as.numeric(udprn))
@@ -233,8 +234,14 @@ residential <- shes.strata %>%
          shes_y2 = ifelse(shes_set == "B", 1, 0),
          shes_y3 = ifelse(shes_set == "C", 1, 0),
          shes_y4 = ifelse(shes_set == "D", 1, 0)) %>%
-  right_join(dz_info) %>%
-  right_join(residential)
+  right_join(dz_info,
+             by = join_by(dz11),
+             suffix = c('.x', '')) %>%
+  select(-contains('.x')) %>%
+  right_join(residential,
+             by = join_by(dz11),
+             suffix = c('.x', '')) %>%
+  select(-contains('.x')) 
 nrow(residential)
 
 # Remove observations with infrequent la_scode, la_code and la combination
@@ -246,7 +253,10 @@ pafaux <- residential %>%
 
 # Merge residential with pafaux
 paf_check <- residential %>% 
-  left_join(pafaux)
+  left_join(pafaux,
+            by = join_by(la_code),
+            suffix = c('', '.y')) %>%
+  select(-contains('.y'))
 nrow(paf_check)
 
 # Harmonise la and la_code variables

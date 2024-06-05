@@ -133,11 +133,12 @@ qa_export <- function(list_df, survey){
   
   # udprn ----
   
-  # add red/green colouring to columns containing the word 'udprn'
+  # add red colouring to columns containing the word 'udprn'
   # red if udprn isn't 0 (i.e., udprn has been previously sampled)
   
   udprn <- grep("^udprn", colnames(data))
-  if(names(list_df[i]) == "previously.sampled.udprn"){
+  if(names(list_df[i]) == "previously.sampled.udprn" & 
+     nrow(list_df[["previously.sampled.udprn"]]) != 0){
     conditionalFormatting(wb = wb, sheet = sheet,
                           cols = udprn, 
                           rows = 2:(nrow(data)+1),
@@ -145,7 +146,34 @@ qa_export <- function(list_df, survey){
                           rule = ' != 0',
                           style = redstyle)
   }
+  
+  # sampled postcodes ----
+  
+  # add red/green colouring to sampled postcodes
+  # red if more than 10 addresses were sampled in one postcode
+ 
+  if(names(list_df[i]) == "sampled.postcodes"){
+    conditionalFormatting(wb = wb, 
+                          sheet = sheet,
+                          cols = 2, 
+                          rows = 2:(nrow(data)+1),
+                          type = "expression",
+                          rule = ' > 10',
+                          style = redstyle)
   }
+  
+  if(names(list_df[i]) == "sampled.postcodes"){
+    conditionalFormatting(wb = wb, 
+                          sheet = sheet,
+                          cols = 2, 
+                          rows = 2:(nrow(data)+1),
+                          type = "expression",
+                          rule = ' <= 10',
+                          style = greenstyle)
+  }
+  
+  
+}
   
   # export to Excel file
   path <- eval(as.name(paste0(survey, ".path")))
