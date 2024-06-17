@@ -41,14 +41,14 @@ source(here::here("scripts", "config.R"))
 
 folders <- paste0(
   here("output"), "/", 
-  syear, " Sampling"
+  config$syear, " Sampling"
 )
 
 subfolders <- paste0(
   folders, "/", 
   c("Scottish Crime and Justice Survey ",
     "Scottish Health Survey ",
-    "Scottish Household Survey "), syear, "/"
+    "Scottish Household Survey "), config$syear, "/"
 )
 
 # Create subfolder for each survey

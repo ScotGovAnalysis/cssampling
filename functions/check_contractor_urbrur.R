@@ -30,12 +30,12 @@ cs_check_contractor_urbrur <- function(sample, previous.sample){
   {
     if (any(contractor.urbrur.la.qa %>% 
             select(starts_with("diff")) < ifelse(survey == "shes",
-                                                 -shes.urbrur.threshold,
-                                                 -paf_sample.threshold) |
+                                                 -config$shes.urbrur.threshold,
+                                                 -config$paf_sample.threshold) |
             contractor.urbrur.la.qa %>% 
             select(starts_with("diff")) > ifelse(survey == "shes",
-                                                shes.urbrur.threshold,
-                                                paf_sample.threshold)))
+                                                config$shes.urbrur.threshold,
+                                                config$paf_sample.threshold)))
     {warning(paste0("For at least one local authority and ",
                     "urban rural classification, the difference between ",
                  "previous and current sample is greater or lower than expected"))}
@@ -56,8 +56,8 @@ cs_check_contractor_urbrur <- function(sample, previous.sample){
   
   # Print warning if diff is greater or lower than threshold
   {
-    if (any(contractor.urbrur.qa %>% select(starts_with("diff")) < -paf_sample.threshold |
-            contractor.urbrur.qa %>% select(starts_with("diff")) > paf_sample.threshold))
+    if (any(contractor.urbrur.qa %>% select(starts_with("diff")) < -config$paf_sample.threshold |
+            contractor.urbrur.qa %>% select(starts_with("diff")) > config$paf_sample.threshold))
     {warning(paste0("For at least one urban rural classification, the percentage of ",
                  "sampled addresses differs considerably from ",
                  "last year's sample"))}

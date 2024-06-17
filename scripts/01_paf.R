@@ -40,7 +40,7 @@ message(normal("Import data"))
 
 # Code to import the postcode address file, clean names, remove columns 
 # that aren't needed, convert "" to NA and clean datazone variable
-rawpaf <-  read_csv(infilenm.path,
+rawpaf <-  read_csv(config$infilenm.path,
                     col_names = TRUE,
                     na = c("", "NA"),
                     col_select = c(Organisation, Property, Street, 
@@ -54,16 +54,16 @@ rawpaf <-  read_csv(infilenm.path,
          udprn = as.numeric(udprn))
 
 # Import datazone information and add indicator for SHeS year
-dz_info <- haven::read_sas(dz.path) %>%
+dz_info <- haven::read_sas(config$dz.path) %>%
   cs_clean_names_modified()
 
 # Import dead postcode file
-postcodes <- read.csv(pcd.path, header = TRUE, na = "") %>%
+postcodes <- read.csv(config$pcd.path, header = TRUE, na = "") %>%
   cs_clean_names_modified() %>%
   select(postcode, date_of_deletion)
 
 # Import SHeS strata file
-shes.strata <- read.csv(shes.strata.path, 
+shes.strata <- read.csv(config$shes.strata.path, 
                         header = TRUE, na = "") %>%
   cs_clean_names_modified()
 

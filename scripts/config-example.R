@@ -20,9 +20,12 @@ set.seed(SEED_NUMBER)
 
 ### 1 - Sample year - TO UPDATE ----
 
+# initiate list 
+config <- list()
+
 # Year sample is being taken for (usually the coming year)
 # (i.e., 20XX)
-syear <- 20XX
+config$syear <- 20XX
 
 ### 2 - File paths - TO UPDATE ----
 
@@ -33,7 +36,7 @@ syear <- 20XX
 datashare.path <- "DATA_PATH"
 
 # Path to SAS data
-sasdata.path <- "SAS_PATH"
+config$sasdata.path <- "SAS_PATH"
 
 ### 3 - File names - TO UPDATE ----
 
@@ -45,75 +48,75 @@ infilenm.path <- "PAF_PATH"
 # The most recent version should be used.
 # Data can be accessed via the following link:
 # https://www.nrscotland.gov.uk/statistics-and-data/geography/nrs-postcode-extract
-pcd.path <- "OLD_PAF_PATH"
+config$pcd.path <- "OLD_PAF_PATH"
 
 # File path of SIMD rank information for each datazone
-dz_simd.path <- "SIMD_PATH"
+config$dz_simd.path <- "SIMD_PATH"
 
 # File path of datazone information.
 # DZ_info is a dataset created by Alex Stannard that has all datazones, 
 # their LA, urb/rur status, deprivation, cluster for health survey.
 # The file is should be updated regularly.
 # The most recent version should be used. 
-dz.path <- "DATAZONE_PATH"
+config$dz.path <- "DATAZONE_PATH"
 
 # File path of most recent household estimates by datazone.
 # This file is updated by NRS once a year. 
 # The most recent version should be used.
 # Data can be accessed here:
 # https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/households/household-estimates/small-area-statistics-on-households-and-dwellings
-hh_dz.path <- "HH_ESTIMATES_PATH"
+config$hh_dz.path <- "HH_ESTIMATES_PATH"
 
 ### 3a - File names SCJS - TO UPDATE ----
 
 # File path of SCJS sample size file
-scjs.samplesize.path <- "SCJS_SAMPLE_SIZE_PATH"
+config$scjs.samplesize.path <- "SCJS_SAMPLE_SIZE_PATH"
 
 # File path of previous year's SCJS contractor sample
-scjs.contractor.sample.previous.path <- "SCJS_PREV_CONTRACTOR_SAMPLE_PATH"
+config$scjs.contractor.sample.previous.path <- "SCJS_PREV_CONTRACTOR_SAMPLE_PATH"
 
 ### 3b - File names SHS - TO UPDATE ----
 
 # File path of SHS sample size file
-shs.samplesize.path <- "SHS_SAMPLE_SIZE_PATH"
+config$shs.samplesize.path <- "SHS_SAMPLE_SIZE_PATH"
 
 # File path of previous year's SHS contractor sample
-shs.contractor.sample.previous.path <- "SHS_PREV_CONTRACTOR_SAMPLE_PATH"
+config$shs.contractor.sample.previous.path <- "SHS_PREV_CONTRACTOR_SAMPLE_PATH"
 
 ### 3c - File names SHeS - TO UPDATE ----
 
 # File path of SHeS sample size file
-shes.samplesize.path <- "SHES_SAMPLE_SIZE_PATH"
+config$shes.samplesize.path <- "SHES_SAMPLE_SIZE_PATH"
 
 # File path of previous year's SHeS contractor sample
-shes.contractor.sample.previous.path <- "SHES_PREV_CONTRACTOR_SAMPLE_PATH"
+config$shes.contractor.sample.previous.path <- "SHES_PREV_CONTRACTOR_SAMPLE_PATH"
 
 # File path of SHeS strata file
 # Clusters need changing every 4 years. 
 # This batch relates to 2020-2023.
-shes.strata.path <- "SHES_STRATA_PATH"
+config$shes.strata.path <- "SHES_STRATA_PATH"
 
 # File path of SHeS clusters
-shes.clusters.path <- "SHES_CLUSTERS_PATH"
+config$shes.clusters.path <- "SHES_CLUSTERS_PATH"
 
 # File path for SHeS biomod
-biomod.path <- "SHES_BIOMOD_PATH"
+config$biomod.path <- "SHES_BIOMOD_PATH"
 
 # SHeS Survey Sweep
 # 1 = 2021, 2 = 2022, 3 = 2023, 4 = 2024
 # 1 = 2025, 2 = 2026, etc
-shes.surveysweep <- rep(1:4, 100)[syear-2021+1]
+config$shes.surveysweep <- rep(1:4, 100)[config$syear-2021+1]
 
 # SHeS Bio mod stream
 # A = 2021, B = 2022, C = 2023, D = 2024
 # A = 2025, B = 2026, etc
-shes.biomodstream <- rep(c("A", "B", "C", "D"), 100)[syear-2021+1]
+config$shes.biomodstream <- rep(c("A", "B", "C", "D"), 100)[config$syear-2021+1]
 
 # SHeS biomod sample size
-biomodsamplesize <- VALUE
+config$biomodsamplesize <- VALUE
 
 # SHeS Fife child boost
-fife.childboost <- VALUE
+config$fife.childboost <- VALUE
 
 ### 4 - Used addresses - TO UPDATE ----
 
@@ -130,7 +133,7 @@ fife.childboost <- VALUE
 # actually used.
 
 # previous samples drawn in SAS
-previous.sas.samples <- c(
+config$previous.sas.samples <- c(
   # SYEAR-4 SAMPLES
   "NAME_OF_SHES_SAMPLE_SYEAR-4",
   "NAME_OF_SCJS_SAMPLE_SYEAR-4",
@@ -150,19 +153,19 @@ previous.sas.samples <- c(
 )
 
 # get paths of all previously sampled address files
-previous.sas.samples.path <- paste0(sasdata.path, previous.sas.samples, ".sas7bdat")
+config$previous.sas.samples.path <- paste0(config$sasdata.path, config$previous.sas.samples, ".sas7bdat")
 
 # add path to samples that were accidentally overwritten in SAS
-prev.csv <- "OVERWRITTEN_SAMPLE_PATH"
+config$prev.csv <- "OVERWRITTEN_SAMPLE_PATH"
 
 # previous samples drawn in R
-previous.rap.samples.path <- c(
+config$previous.rap.samples.path <- c(
   # SYEAR SAMPLES
   "NAME_OF_SHES_SAMPLE_SYEAR",
   ...
 )
 
-previous.rap.samples.path <- paste0(previous.rap.samples.path, ".rds")
+config$previous.rap.samples.path <- paste0(config$previous.rap.samples.path, ".rds")
 
 ### 5 - Thresholds for checking ----
 
@@ -175,29 +178,29 @@ previous.rap.samples.path <- paste0(previous.rap.samples.path, ".rds")
 # The values usually don't need to be updated every year.
 
 # Acceptable number of business addresses in the sample
-business.threshold <- VALUE
+config$business.threshold <- VALUE
 
 # % difference between PAF and sample
-paf_sample.threshold <- VALUE
+config$paf_sample.threshold <- VALUE
 
 # % difference of n across streams in SHS
-shs.stream.threshold <- VALUE
+config$shs.stream.threshold <- VALUE
 
 # Difference of n across streams in SCJS
-scjs.stream.threshold <- VALUE
+config$scjs.stream.threshold <- VALUE
 
 # Difference between current and previous samples for SIMDQ variable
-simdq.threshold <- VALUE
+config$simdq.threshold <- VALUE
 
 # % difference between current and previous samples for SIMDQ variable in SHeS
-shes.simdq.threshold <- VALUE
+config$shes.simdq.threshold <- VALUE
 
 # Acceptable number of samples per postcode
-postcode.threshold <- VALUE
+config$postcode.threshold <- VALUE
 
 # Acceptable number of SHeS samples per postcode
-shes.postcode.threshold <- VALUE
+shes.config$postcode.threshold <- VALUE
 
 # % difference between PAF and sample AND previous and current sample
 # for urban/rural in SHeS
-shes.urbrur.threshold <- VALUE
+config$shes.urbrur.threshold <- VALUE

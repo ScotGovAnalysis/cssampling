@@ -9,7 +9,7 @@
 #' which contains the previous sample.
 #' 
 #' @examples
-#' cs_delivered_udprn(syear, datashare.path)
+#' cs_delivered_udprn(config$syear, datashare.path)
 
 cs_delivered_udprn <- function(sampling_year, filepath){
   

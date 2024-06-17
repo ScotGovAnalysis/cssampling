@@ -33,29 +33,29 @@ list_used_addresses <- list()
 
 # Import all previously sampled address files and 
 # add column with file name
-if(exists("previous.sas.samples.path") == TRUE){
+if("previous.sas.samples.path" %in% names(config) == TRUE){
   prev.sas.samples <-
-    do.call(rbind, pblapply(seq_along(previous.sas.samples.path),
+    do.call(rbind, pblapply(seq_along(config$previous.sas.samples.path),
                             function(x)
                               transform(
-                                haven::read_sas(previous.sas.samples.path[x], 
+                                haven::read_sas(config$previous.sas.samples.path[x], 
                                                 col_select = "UDPRN"),
-                                filename = previous.sas.samples.path[x]))) %>%
+                                filename = config$previous.sas.samples.path[x]))) %>%
     cs_clean_names_modified()
   list_used_addresses <- c(list_used_addresses, list(prev.sas.samples))
 }
 
 # import overwritten SAS files
-if(exists("prev.csv") == TRUE){
-  prev.csv.samples <- pblapply(prev.csv, cs_import_multiple_files_csv)
+if("prev.csv" %in% names(config) == TRUE){
+  prev.csv.samples <- pblapply(config$prev.csv, cs_import_multiple_files_csv)
   prev.csv.samples <- do.call("rbind", prev.csv.samples)
   list_used_addresses <- c(list_used_addresses, list(prev.csv.samples))
 }
 
 # import rds files (i.e., samples drawn with RAP)
-if(exists("previous.rap.samples.path") == TRUE){
-  files_prev_rap <- list.files(path = datashare.path,
-                               pattern = capture.output(cat(previous.rap.samples.path, sep = "|")),
+if("previous.rap.samples.path" %in% names(config) == TRUE){
+  files_prev_rap <- list.files(path = config$datashare.path,
+                               pattern = capture.output(cat(config$previous.rap.samples.path, sep = "|")),
                                full.names = TRUE,
                                recursive = TRUE,
                                ignore.case = TRUE)

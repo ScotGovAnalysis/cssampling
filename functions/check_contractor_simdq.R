@@ -40,12 +40,12 @@ cs_check_contractor_simdq <- function(sample, previous.sample){
   {
     if (any(contractor.simdq.qa %>% 
             select(starts_with("diff")) < ifelse(survey == "shes",
-                                                 -shes.simdq.threshold,
-                                                 -simdq.threshold) |
+                                                 -config$shes.simdq.threshold,
+                                                 -config$simdq.threshold) |
             contractor.simdq.qa %>% 
             select(starts_with("diff")) > ifelse(survey == "shes",
-                                                 shes.simdq.threshold,
-                                                 simdq.threshold) ))
+                                                 config$shes.simdq.threshold,
+                                                 config$simdq.threshold) ))
     {warning(paste0("For at least one local authority and SIMDQ rank,",
                     "the difference between previous and current sample is greater than expected"))}
   }

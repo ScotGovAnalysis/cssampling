@@ -26,7 +26,7 @@ cs_export_rds <- function(object) {
          "_",
          substitute(object),
          ".",
-         syear,
+         config$syear,
          ".rds"),
   compress = "gz")
 } 

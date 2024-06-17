@@ -13,14 +13,14 @@ cs_check_contractor_businesses <- function(sample){
   contractor.business <- sample %>% 
     filter(grepl('Business', print_address))
   {
-    if(nrow(contractor.business) > business.threshold)
+    if(nrow(contractor.business) > config$business.threshold)
     {warning("More than 10 business addresses are in the contractor sample.")}
     }
   
   contractor.indust <- sample %>% 
     filter(grepl('Industrial', print_address))
   {
-    if(nrow(contractor.indust) > business.threshold)
+    if(nrow(contractor.indust) > config$business.threshold)
     {warning("More than 10 industrial addresses are in the contractor sample.")}
     }
   

@@ -21,8 +21,8 @@ cs_check_postcodes <- function(sample){
   # print warning
   {
     if (head(pcode$n, 1) > ifelse(survey == "shes", 
-                                  shes.postcode.threshold,
-                                  postcode.threshold))
+                                  config$shes.postcode.threshold,
+                                  config$postcode.threshold))
     {warning(paste0("At least one postcode has been sampled more than anticipated.",
                     " Check Excel file to confirm these are all small postcodes."))}
     }

@@ -51,28 +51,28 @@ shes.biomod.frameandmatchedsample <- read_rds(paste0(shes.path, "/",
 # Import contractor sample
 contractor.sample <- read.csv(paste0(shes.path,
                                      "shes.contractorsample.",
-                                     syear,
+                                     config$syear,
                                      ".csv")) %>%
   cs_clean_names_modified()
 
 # Import sample size information
-sample.size <- read.csv(shes.samplesize.path, 
+sample.size <- read.csv(config$shes.samplesize.path, 
                         header = TRUE, na = "") %>%
   cs_clean_names_modified() %>%
   rename(la_code = shes_strata)
 
 # Import data zones and select required columns
-dz_info <- haven::read_sas(dz.path) %>%
+dz_info <- haven::read_sas(config$dz.path) %>%
   cs_clean_names_modified() %>% 
   select(la, dz11)
 
 # Import previous year's contractor sample
-contractor.sample.previous <- read.csv(shes.contractor.sample.previous.path) %>%
+contractor.sample.previous <- read.csv(config$shes.contractor.sample.previous.path) %>%
   cs_clean_names_modified()
 
 # Import household estimates by datazone
-last_sheet <- length(excel_sheets(hh_dz.path))
-hh.est.dz <- suppressWarnings(read_excel(hh_dz.path, 
+last_sheet <- length(excel_sheets(config$hh_dz.path))
+hh.est.dz <- suppressWarnings(read_excel(config$hh_dz.path, 
                         sheet = last_sheet,
                         skip = 3) %>%
   clean_names(replace = c("Data Zone code" = "datazone")) %>%
@@ -116,7 +116,7 @@ contractor.sample.size.check <- cs_check_sample_size(
 message(normal("Check for previously sampled addresses"))
 
 # Import previously sampled and delivered UDPRNs
-udprn.qa <- cs_delivered_udprn(sampling_year = syear,
+udprn.qa <- cs_delivered_udprn(sampling_year = config$syear,
                             filepath = datashare.path)
 
 ### 5 - Mean SIMD for sample & sampling frame by local authority ----
@@ -214,7 +214,7 @@ core.qa <- contractor.sample %>%
   ungroup() %>%
   mutate(diff = .[[3]] - .[[2]])
 
-if(any(core.qa$diff < -paf_sample.threshold | core.qa$diff > paf_sample.threshold)){
+if(any(core.qa$diff < -config$paf_sample.threshold | core.qa$diff > config$paf_sample.threshold)){
   warning(print(paste0("For at least one local authority,",
                        "the difference in urban/rural classification",
                        "between core bio and core non-bio",

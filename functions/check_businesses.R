@@ -17,7 +17,7 @@ business.qa <- sample %>%
 # Confirm that the number of businesses is low
 # print warning if this isn't the case
 {
-  if(nrow(business.qa) > business.threshold)
+  if(nrow(business.qa) > config$business.threshold)
   {warning("More than 10 business addresses have been sampled (total sample).")}
   }
 

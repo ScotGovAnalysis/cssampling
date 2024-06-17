@@ -43,21 +43,21 @@ recent_paf <- cs_most_recent_file(path = here("lookups"), pattern = "paf")
 clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
 
 # Import SIMD ranks for datazones
-dz11_simd20 <- haven::read_sas(dz_simd.path) %>%
+dz11_simd20 <- haven::read_sas(config$dz_simd.path) %>%
   cs_clean_names_modified()
 
 # Import sample size file
-shes.samplesize <- read.csv(shes.samplesize.path, 
+shes.samplesize <- read.csv(config$shes.samplesize.path, 
                             header = TRUE, na = "") %>%
   cs_clean_names_modified()
 
 # Import SHeS cluster file
-shes_clusters <- read.csv(shes.clusters.path, 
+shes_clusters <- read.csv(config$shes.clusters.path, 
                           header = TRUE, na = "") %>%
   cs_clean_names_modified()
 
 # import biomod file
-biomodsframe <- read.csv(biomod.path, 
+biomodsframe <- read.csv(config$biomod.path, 
                          header = TRUE, na = "") %>%
   cs_clean_names_modified()
 
@@ -84,10 +84,10 @@ shes.sframe <- shes.sframe %>%
   left_join(shes_clusters,
             by = join_by(dz11, simd20rank)) %>%
   
-  # create 'shes_clustersize' column based on shes.surveysweep
+  # create 'shes_clustersize' column based on config$shes.surveysweep
   mutate(across(
     .cols = contains(paste0("shes_y", 
-                            shes.surveysweep), ignore.case = FALSE),
+                            config$shes.surveysweep), ignore.case = FALSE),
     .names = 'shes_clustersize'))
 nrow(shes.sframe)
 
@@ -155,7 +155,7 @@ message(normal("Draw biological sample"))
 # select which intermediate geographies (data zones in the islands) 
 # will be subject to the biological module
 
-biomod <- biomodsframe %>% filter(stream == shes.biomodstream)
+biomod <- biomodsframe %>% filter(stream == config$shes.biomodstream)
 
 # Draw stratified systematic sample
 
@@ -166,7 +166,7 @@ biomod.control <- c("health_board",
 
 biomodsample <- biomod %>%
   cs_sampling(stratum = "stream",
-              sample_size = biomodsamplesize,
+              sample_size = config$biomodsamplesize,
               prob = rep(1/nrow(biomod), 
                          times = nrow(biomod)),
                          control = biomod.control)
@@ -289,7 +289,7 @@ cs_export_rds(shes.reservesample)
 write.csv(shes.contractorsample.export, 
           paste0(shes.path,
                  "shes.contractorsample.",
-                 syear,
+                 config$syear,
                  ".csv"),
           row.names = FALSE)
 

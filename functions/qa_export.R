@@ -41,7 +41,7 @@ cs_qa_export <- function(list_df, survey){
                           style = c("red", "green", "red"),
                           cols = diff, rows = (1:nrow(data)+1),
                           type = "colourScale",
-                          rule = c(-paf_sample.threshold, 0, paf_sample.threshold))
+                          rule = c(-config$paf_sample.threshold, 0, config$paf_sample.threshold))
       }
     
     # urbrur in SHeS ----
@@ -55,7 +55,7 @@ cs_qa_export <- function(list_df, survey){
                             style = c("red", "green", "red"),
                             cols = diff, rows = (1:nrow(data)+1),
                             type = "colourScale",
-                            rule = c(-shes.urbrur.threshold, 0, shes.urbrur.threshold))
+                            rule = c(-config$shes.urbrur.threshold, 0, config$shes.urbrur.threshold))
     }
     
     # SIMDQ ----
@@ -69,12 +69,12 @@ cs_qa_export <- function(list_df, survey){
                             cols = diff, rows = (1:nrow(data)+1),
                             type = "colourScale",
                             rule = c(ifelse(survey == "shes",
-                                            -shes.simdq.threshold,
-                                            -simdq.threshold), 
+                                            -config$shes.simdq.threshold,
+                                            -config$simdq.threshold), 
                                      0, 
                                      ifelse(survey == "shes",
-                                            shes.simdq.threshold,
-                                            simdq.threshold)))
+                                            config$shes.simdq.threshold,
+                                            config$simdq.threshold)))
     }
     
     # check ----
@@ -88,10 +88,10 @@ cs_qa_export <- function(list_df, survey){
   if(any(grepl("^check", colnames(data)))){
     
     check <- grep("^check", colnames(data))
-    shs.check <- list(paste0(" <= ", shs.stream.threshold),
-                      paste0(" > ", shs.stream.threshold))
-    scjs.check <- list(paste0(" <= ", scjs.stream.threshold),
-                       paste0(" > ", scjs.stream.threshold))
+    shs.check <- list(paste0(" <= ", config$shs.stream.threshold),
+                      paste0(" > ", config$shs.stream.threshold))
+    scjs.check <- list(paste0(" <= ", config$scjs.stream.threshold),
+                       paste0(" > ", config$scjs.stream.threshold))
     
     conditionalFormatting(wb = wb, sheet = sheet,
                           cols = check, rows = 2:(nrow(data)+1),
@@ -182,7 +182,7 @@ cs_qa_export <- function(list_df, survey){
                                  "_",
                                survey,
                                ".contractorsample.",
-                               syear,
+                               config$syear,
                                " - QA.xlsx"), 
              overwrite = TRUE)
   }

@@ -43,12 +43,12 @@ recent_paf <- paf_list[grepl(paf_v, paf_list,
 clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
 
 # Import sample size file
-scjs.samplesize <- read.csv(scjs.samplesize.path, 
+scjs.samplesize <- read.csv(config$scjs.samplesize.path, 
                                     header = TRUE, na = "") %>%
   cs_clean_names_modified()
 
 # Import SIMD ranks for datazones
-dz11_simd20 <- haven::read_sas(dz_simd.path) %>%
+dz11_simd20 <- haven::read_sas(config$dz_simd.path) %>%
   cs_clean_names_modified()
 
 ### 2 - Used addresses ---- 
@@ -153,7 +153,7 @@ cs_export_rds(scjs.reservesample)
 write.csv(scjs.contractor.export, 
           paste0(scjs.path,
                  "scjs.contractorsample.",
-                 syear,
+                 config$syear,
                  ".csv"),
           row.names = FALSE)
 

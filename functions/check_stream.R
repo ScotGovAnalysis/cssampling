@@ -46,7 +46,7 @@ cs_check_stream <- function(sample, grouping_variable,
   if(survey == "scjs") {
     # check streams are equally distributed per local authority
     {
-      if(!all(contractor.stream.qa$check %in% c(0:scjs.stream.threshold)))
+      if(!all(contractor.stream.qa$check %in% c(0:config$scjs.stream.threshold)))
       {warning("Streams are not equally distributed across local authorities.")}
     }
   }
@@ -55,7 +55,7 @@ cs_check_stream <- function(sample, grouping_variable,
   if(survey == "shs") {
     # check streams are equally distributed per local authority
     {
-      if(!all(contractor.stream.qa$check < shs.stream.threshold))
+      if(!all(contractor.stream.qa$check < config$shs.stream.threshold))
       {warning("Streams are not equally distributed across local authorities.")}
     }
   }

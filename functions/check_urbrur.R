@@ -29,7 +29,7 @@ cs_check_urbrur <- function(df){
   
   # Print warning if diff is too great
   {
-    if (min(urbrur.la.qa$diff) < -paf_sample.threshold | max(urbrur.la.qa$diff) > paf_sample.threshold)
+    if (min(urbrur.la.qa$diff) < -config$paf_sample.threshold | max(urbrur.la.qa$diff) > config$paf_sample.threshold)
     {warning(paste0("In at least one local authority, the difference in urbrur percentage ",
                  "between the sampled and non-sampled addresses is greater than expected"))}
     }
