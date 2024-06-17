@@ -8,9 +8,9 @@
 #' sample size requirements per LA and difference between the two
 #' 
 #' @examples
-#' check_sample_size(df = contractor.sample, sample.size = sample.size)
+#' cs_check_sample_size(df = contractor.sample, sample.size = sample.size)
 
-check_sample_size <- function(df, sample.size){
+cs_check_sample_size <- function(df, sample.size){
   
   # Compare sample size requirements with drawn sample
   contractor.sample.size.check <- contractor.sample %>% 

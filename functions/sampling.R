@@ -19,13 +19,13 @@
 #' @returns Data frame of sampled addresses.
 #' 
 #' @examples
-#' sampling(sampling(df = child.sframe, 
+#' cs_sampling(sampling(df = child.sframe, 
 #'                   stratum = "la_code",
 #'                   sample_size = child.samplesize$child_n,
 #'                   prob = rep(1/nrow(child.sframe), times = nrow(child.sframe)),
 #'                   control = c))
 
-sampling <- function(df, stratum, sample_size, prob, control){
+cs_sampling <- function(df, stratum, sample_size, prob, control){
   
   # Order sampling frame prior to drawing the sample
   order.var <- c(stratum, control) 
@@ -48,7 +48,7 @@ sampling <- function(df, stratum, sample_size, prob, control){
                         pik = prob)
   
   totalsample <- getdata(df, totalsample) %>% 
-    clean_names_modified()
+    cs_clean_names_modified()
   
   return(totalsample)
 }

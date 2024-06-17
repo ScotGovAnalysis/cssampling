@@ -10,9 +10,9 @@
 #' transposes the output.
 #' 
 #' @examples
-#' la_grouping(contractor.sample, dz11_urbrur2020)
+#' cs_la_grouping(contractor.sample, dz11_urbrur2020)
 
-la_grouping <- function(df, grouping_variable) {
+cs_la_grouping <- function(df, grouping_variable) {
   
   # defuse grouping_variable
   group <- rlang::enquo(grouping_variable)

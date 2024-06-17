@@ -41,13 +41,13 @@ if(exists("previous.sas.samples.path") == TRUE){
                                 haven::read_sas(previous.sas.samples.path[x], 
                                                 col_select = "UDPRN"),
                                 filename = previous.sas.samples.path[x]))) %>%
-    clean_names_modified()
+    cs_clean_names_modified()
   list_used_addresses <- c(list_used_addresses, list(prev.sas.samples))
 }
 
 # import overwritten SAS files
 if(exists("prev.csv") == TRUE){
-  prev.csv.samples <- pblapply(prev.csv, import_multiple_files_csv)
+  prev.csv.samples <- pblapply(prev.csv, cs_import_multiple_files_csv)
   prev.csv.samples <- do.call("rbind", prev.csv.samples)
   list_used_addresses <- c(list_used_addresses, list(prev.csv.samples))
 }

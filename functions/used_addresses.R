@@ -15,9 +15,9 @@
 #' active addresses per data zone.
 #'
 #' @examples
-#' used_addresses(prev_samples = usedaddresses, paf = clean_paf)
+#' cs_used_addresses(prev_samples = usedaddresses, paf = clean_paf)
 
-used_addresses <- function(prev_samples, paf){
+cs_used_addresses <- function(prev_samples, paf){
   
   sframe <- prev_samples %>% 
     

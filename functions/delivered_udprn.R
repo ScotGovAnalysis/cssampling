@@ -9,9 +9,9 @@
 #' which contains the previous sample.
 #' 
 #' @examples
-#' delivered_udprn(syear, datashare.path)
+#' cs_delivered_udprn(syear, datashare.path)
 
-delivered_udprn <- function(sampling_year, filepath){
+cs_delivered_udprn <- function(sampling_year, filepath){
   
   # Create variables with all survey names and four years prior to sampling year
   usedaddressyears <- paste0(c(sampling_year-4, sampling_year-3, 
@@ -35,7 +35,7 @@ delivered_udprn <- function(sampling_year, filepath){
   files_del
   
   # Import all delivered UDPRNs
-  prev.samples <- pblapply(files_del, import_multiple_files_csv)
+  prev.samples <- pblapply(files_del, cs_import_multiple_files_csv)
   prev.samples <- do.call("rbind", prev.samples)
   
   # Check if any of the recently sampled UDPRNs has been previously delivered

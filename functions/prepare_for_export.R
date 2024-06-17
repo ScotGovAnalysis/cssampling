@@ -10,9 +10,9 @@
 #' @returns A cleaned data frame ready to be exported to a csv file.
 #'
 #' @examples
-#' prepare_for_export(scjs.contractor.export)
+#' cs_prepare_for_export(scjs.contractor.export)
 
-prepare_for_export <- function(df){
+cs_prepare_for_export <- function(df){
   df %>%
     
     # transform property column to character column to ensure that

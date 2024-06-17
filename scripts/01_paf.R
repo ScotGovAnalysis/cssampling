@@ -49,23 +49,23 @@ rawpaf <-  read_csv(infilenm.path,
                                    YCOORD, XCOORD, "2011Datazone", LACode, 
                                    UPRN, CouncilTaxBand),
                     show_col_types = FALSE) %>%
-  clean_names_modified() %>%
+  cs_clean_names_modified() %>%
   mutate(datazone = substr(x2011datazone, 1, 9),
          udprn = as.numeric(udprn))
 
 # Import datazone information and add indicator for SHeS year
 dz_info <- haven::read_sas(dz.path) %>%
-  clean_names_modified()
+  cs_clean_names_modified()
 
 # Import dead postcode file
 postcodes <- read.csv(pcd.path, header = TRUE, na = "") %>%
-  clean_names_modified() %>%
+  cs_clean_names_modified() %>%
   select(postcode, date_of_deletion)
 
 # Import SHeS strata file
 shes.strata <- read.csv(shes.strata.path, 
                         header = TRUE, na = "") %>%
-  clean_names_modified()
+  cs_clean_names_modified()
 
 ### 2 - Postcode address file (PAF) ----
 

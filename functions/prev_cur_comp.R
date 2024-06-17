@@ -9,9 +9,9 @@
 #' The diff column shows the difference between both samples.
 #' 
 #' @examples
-#' prev_cur_comp(contractor.la.urbrur, contractor.previous.la.urbrur)
+#' cs_prev_cur_comp(contractor.la.urbrur, contractor.previous.la.urbrur)
 
-prev_cur_comp <- function(current_df, previous_df) {
+cs_prev_cur_comp <- function(current_df, previous_df) {
   
   # calculate different between current and previous samples
   diff <- cbind(diff = current_df[,-1] - previous_df[,-1]) %>%

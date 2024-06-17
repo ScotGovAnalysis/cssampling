@@ -9,10 +9,10 @@
 #' lies between the lower and upper CIs of the mean SIMD of the sample.
 #' 
 #' @examples
-#' check_mean_simd(total.sample = total.sample, paf = paf, 
+#' cs_check_mean_simd(total.sample = total.sample, paf = paf, 
 #'                 grouping_variable = la)
 
-check_mean_simd <- function(total.sample, paf, grouping_variable) {
+cs_check_mean_simd <- function(total.sample, paf, grouping_variable) {
   
   # defuse grouping_variable
   group <- rlang::enquo(grouping_variable)

@@ -9,9 +9,9 @@
 #' which household is to be contacted.
 #'
 #' @examples
-#' selected_mo(scjs.contractor.export)
+#' cs_selected_mo(scjs.contractor.export)
 
-selected_mo <- function(df){
+cs_selected_mo <- function(df){
   df %>%
     mutate(rand = (runif(nrow(df), 0, 1)),
            selected_mo = round(rand*multisize + 0.5, 0)) %>%

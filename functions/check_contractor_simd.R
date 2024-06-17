@@ -9,10 +9,10 @@
 #' sample frame.
 #' 
 #' @examples
-#' check_contractor_simd(sample = contractor.sample, paf.simd = simd.qa[[2]],
+#' cs_check_contractor_simd(sample = contractor.sample, paf.simd = simd.qa[[2]],
 #'                       grouping_variable = la)
 
-check_contractor_simd <- function(sample, paf.simd, grouping_variable){
+cs_check_contractor_simd <- function(sample, paf.simd, grouping_variable){
   
   # defuse grouping_variable
   group <- rlang::enquo(grouping_variable)

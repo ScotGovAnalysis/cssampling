@@ -8,10 +8,10 @@
 #' QA data frames.
 #' 
 #' @examples
-#' qa_export(list_df = qa, survey = "scjs")
+#' cs_qa_export(list_df = qa, survey = "scjs")
 
 
-qa_export <- function(list_df, survey){
+cs_qa_export <- function(list_df, survey){
   
   wb <- createWorkbook()
   

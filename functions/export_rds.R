@@ -10,9 +10,9 @@
 #' @returns Rds file in output folder of survey for sampling year.
 #'
 #' @examples
-#' export_rds(shs.totalsample)
+#' cs_export_rds(shs.totalsample)
 
-export_rds <- function(object) {
+cs_export_rds <- function(object) {
   
   # get file path of output folder
   survey <- gsub("\\..*", "", as.name(substitute(object)))

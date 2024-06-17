@@ -6,9 +6,9 @@
 #' were sampled.
 #' 
 #' @examples
-#' check_contractor_businesses(sample = contractor.sample)
+#' cs_check_contractor_businesses(sample = contractor.sample)
 
-check_contractor_businesses <- function(sample){
+cs_check_contractor_businesses <- function(sample){
   
   contractor.business <- sample %>% 
     filter(grepl('Business', print_address))
