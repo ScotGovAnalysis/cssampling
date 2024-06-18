@@ -34,21 +34,21 @@ list_used_addresses <- list()
 # Import all previously sampled address files and 
 # add column with file name
 if("previous.sas.samples.path" %in% names(config) == TRUE){
-  prev.sas.samples <-
-    do.call(rbind, pblapply(seq_along(config$previous.sas.samples.path),
-                            function(x)
-                              transform(
-                                haven::read_sas(config$previous.sas.samples.path[x], 
-                                                col_select = "UDPRN"),
-                                filename = config$previous.sas.samples.path[x]))) %>%
+  prev.sas.samples <- config$previous.sas.samples.path %>%
+    purrr::map(\(x) haven::read_sas(x, col_select = "UDPRN") %>%
+                 mutate(filename = x), 
+               .progress = TRUE) %>%
+    purrr::list_rbind() %>%
     css_clean_names_modified()
   list_used_addresses <- c(list_used_addresses, list(prev.sas.samples))
 }
 
 # import overwritten SAS files
 if("prev.csv" %in% names(config) == TRUE){
-  prev.csv.samples <- pblapply(config$prev.csv, css_import_multiple_files_csv)
-  prev.csv.samples <- do.call("rbind", prev.csv.samples)
+  prev.csv.samples <- config$prev.csv %>%
+    purrr::map(\(x) css_import_multiple_files_csv(x), 
+               .progress = TRUE) %>%
+    purrr::list_rbind()
   list_used_addresses <- c(list_used_addresses, list(prev.csv.samples))
 }
 
@@ -60,12 +60,11 @@ if("previous.rap.samples.path" %in% names(config) == TRUE){
                                recursive = TRUE,
                                ignore.case = TRUE)
   
-  # import previously addresses that were sampled with RAP
-  prev.rap.samples.data <- do.call(rbind, pblapply(seq_along(files_prev_rap),
-                                                   function(x)
-                                                     transform(
-                                                       readRDS(files_prev_rap[x]),
-                                                       filename = files_prev_rap[x]))) %>%
+  prev.rap.samples.data <- seq_along(files_prev_rap) %>%
+    purrr::map(\(x) transform(readRDS(files_prev_rap[x])) %>%
+                 mutate(filename = files_prev_rap[x]), 
+               .progress = TRUE) %>%
+    purrr::list_rbind() %>%
     select(udprn, filename)
   list_used_addresses <- c(list_used_addresses, list(prev.rap.samples.data))
 }
