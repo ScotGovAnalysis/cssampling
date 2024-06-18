@@ -21,6 +21,17 @@ rm(list=ls())
 
 source(here::here("scripts", "00_setup.R"))
 
+# check if PAF script has been run and print error if not
+if(!any(grepl(paf_v, paf_list))){
+  stop(print("01_paf.R needs to be run first."))
+}
+
+# check if used addresses script has been run and print error if not
+if(length(list.files(path = here("lookups"),
+                     pattern = "usedaddresses")) == 0){
+  stop(print("02_used_addresses.R needs to be run first."))
+}
+
 # Add message to inform user about progress
 message(title("Execute sampling script"))
 

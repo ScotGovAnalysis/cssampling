@@ -12,6 +12,14 @@
 
 #########################################################################
 
+
+### 0 - Setup ----
+
+# Run setup script which loads all required packages and functions and 
+# executes the config.R script.
+
+source(here::here("scripts", "00_setup.R"))
+
 ### 1 - PAF ----
 
 # Check if PAF script has been run with most recent PAF file

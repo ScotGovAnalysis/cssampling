@@ -12,6 +12,13 @@
 
 #########################################################################
 
+### 0 - Setup ----
+
+# Run setup script which loads all required packages and functions and 
+# executes the config.R script.
+
+source(here::here("scripts", "00_setup.R"))
+
 ### 1 - PAF ----
 
 # Check if PAF script has been run with most recent PAF file
@@ -34,3 +41,4 @@ source(here::here("scripts", "03_shs_sampling.R"))
 
 # Run the checking script to confirm the drawn sample meets requirements
 source(here::here("scripts", "04_shs_checking.R"))
+

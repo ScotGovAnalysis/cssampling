@@ -78,7 +78,7 @@ shs.path <- subfolders[3]
 ### 6 - Extract PAFs ----
 
 # extract PAF version from file name
-paf_v <- str_match(infilenm.path, "\\_\\s*(.*?)\\s*\\.txt")[, 2]
+paf_v <- str_match(config$infilenm.path, "\\_\\s*(.*?)\\s*\\.txt")[, 2]
 
 # get file names of previous cleaned PAFs
 paf_list <- list.files(path = here("lookups"),

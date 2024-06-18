@@ -41,7 +41,7 @@ config$sasdata.path <- "SAS_PATH"
 ### 3 - File names - TO UPDATE ----
 
 # File path of most recent postcode address file (PAF) supplied by NRS
-infilenm.path <- "PAF_PATH"
+config$infilenm.path <- "PAF_PATH"
 
 # File path of postcode file with old addresses.
 # This file is updated twice a year by NRS.

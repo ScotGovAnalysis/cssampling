@@ -24,6 +24,12 @@ survey <- "shes"
 
 source(here::here("scripts", "00_setup.R"))
 
+# check if sampling script has been run and print error if not
+if(length(list.files(path = shes.path,
+                     pattern = "shes.frameandmatchedsample")) == 0){
+  stop(print("03_shes_sampling.R needs to be run first."))
+}
+
 # Add message to inform user about progress
 message(title("Execute checking script"))
 
@@ -117,7 +123,7 @@ message(normal("Check for previously sampled addresses"))
 
 # Import previously sampled and delivered UDPRNs
 udprn.qa <- cs_delivered_udprn(sampling_year = config$syear,
-                            filepath = datashare.path)
+                            filepath = config$datashare.path)
 
 ### 5 - Mean SIMD for sample & sampling frame by local authority ----
 
