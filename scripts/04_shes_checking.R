@@ -39,7 +39,7 @@ message(title("Execute checking script"))
 message(normal("Import data"))
 
 # Identify most recent sampling frame matched with sample
-recent_frameandmatchedsample <- cs_most_recent_file(path = shes.path, 
+recent_frameandmatchedsample <- css_most_recent_file(path = shes.path, 
                                                  pattern = "shes.frameandmatchedsample")
 
 # Import sampling frame matched with sample
@@ -47,7 +47,7 @@ shes.frameandmatchedsample <- read_rds(paste0(shes.path, "/",
                                              recent_frameandmatchedsample))
 
 # Identify most recent sampling frame matched with sample
-recent_biomod.frameandmatchedsample <- cs_most_recent_file(path = shes.path, 
+recent_biomod.frameandmatchedsample <- css_most_recent_file(path = shes.path, 
                                                  pattern = "biomod.frameandmatchedsample")
 
 # Import sampling frame matched with sample
@@ -59,22 +59,22 @@ contractor.sample <- read.csv(paste0(shes.path,
                                      "shes.contractorsample.",
                                      config$syear,
                                      ".csv")) %>%
-  cs_clean_names_modified()
+  css_clean_names_modified()
 
 # Import sample size information
 sample.size <- read.csv(config$shes.samplesize.path, 
                         header = TRUE, na = "") %>%
-  cs_clean_names_modified() %>%
+  css_clean_names_modified() %>%
   rename(la_code = shes_strata)
 
 # Import data zones and select required columns
 dz_info <- haven::read_sas(config$dz.path) %>%
-  cs_clean_names_modified() %>% 
+  css_clean_names_modified() %>% 
   select(la, dz11)
 
 # Import previous year's contractor sample
 contractor.sample.previous <- read.csv(config$shes.contractor.sample.previous.path) %>%
-  cs_clean_names_modified()
+  css_clean_names_modified()
 
 # Import household estimates by datazone
 last_sheet <- length(excel_sheets(config$hh_dz.path))
@@ -111,7 +111,7 @@ nrow(paf)
 message(normal("Check sample size requirements"))
 
 # Compare sample size requirements with drawn sample
-contractor.sample.size.check <- cs_check_sample_size(
+contractor.sample.size.check <- css_check_sample_size(
   df = contractor.sample,
   sample.size = sample.size
 )
@@ -122,7 +122,7 @@ contractor.sample.size.check <- cs_check_sample_size(
 message(normal("Check for previously sampled addresses"))
 
 # Import previously sampled and delivered UDPRNs
-udprn.qa <- cs_delivered_udprn(sampling_year = config$syear,
+udprn.qa <- css_delivered_udprn(sampling_year = config$syear,
                             filepath = config$datashare.path)
 
 ### 5 - Mean SIMD for sample & sampling frame by local authority ----
@@ -130,39 +130,39 @@ udprn.qa <- cs_delivered_udprn(sampling_year = config$syear,
 # Add message to inform user about progress
 message(normal("Mean SIMD for sample & sampling frame by local authority"))
 
-simd.la.qa <- cs_check_mean_simd(total.sample, paf, grouping_variable = la)
+simd.la.qa <- css_check_mean_simd(total.sample, paf, grouping_variable = la)
 
 message(normal("Mean SIMD for sample & sampling frame by health board"))
 
-simd.hb.qa <- cs_check_mean_simd(total.sample, paf, grouping_variable = hb_code)
+simd.hb.qa <- css_check_mean_simd(total.sample, paf, grouping_variable = hb_code)
 
 ### 6 - Urban/rural classification ----
 
 # Add message to inform user about progress
 message(normal("Urban/rural classification"))
 
-urbrur.la.qa <- cs_check_urbrur(shes.frameandmatchedsample)
+urbrur.la.qa <- css_check_urbrur(shes.frameandmatchedsample)
 
 ### 7 - Check postcodes ----
 
 # Add message to inform user about progress
 message(normal("Check postcodes"))
 
-pcode <- cs_check_postcodes(total.sample)
+pcode <- css_check_postcodes(total.sample)
 
 ### 8 - Check business addresses ----
 
 # Add message to inform user about progress
 message(normal("Check business addresses"))
 
-business.qa <- cs_check_businesses(sample = total.sample)
+business.qa <- css_check_businesses(sample = total.sample)
 
 ### 9 - Check multisize distribution ----
 
 # Add message to inform user about progress
 message(normal("Check multisize distribution"))
 
-multisize.qa <- cs_check_multisize(sample = total.sample, paf = paf)
+multisize.qa <- css_check_multisize(sample = total.sample, paf = paf)
 
 ### *CONTRACTOR SAMPLE* ----
 
@@ -171,13 +171,13 @@ multisize.qa <- cs_check_multisize(sample = total.sample, paf = paf)
 # Add message to inform user about progress
 message(normal("Check SIMD by LA"))
 
-contractor.simd.la.qa <- cs_check_contractor_simd(sample = contractor.sample, 
+contractor.simd.la.qa <- css_check_contractor_simd(sample = contractor.sample, 
                                             paf.simd = simd.la.qa[[2]],
                                             grouping_variable = la)
 
 message(normal("Check SIMD by health board"))
 
-contractor.simd.hb.qa <- cs_check_contractor_simd(sample = contractor.sample, 
+contractor.simd.hb.qa <- css_check_contractor_simd(sample = contractor.sample, 
                                                paf.simd = simd.hb.qa[[2]],
                                                grouping_variable = hb_code)
 
@@ -186,7 +186,7 @@ contractor.simd.hb.qa <- cs_check_contractor_simd(sample = contractor.sample,
 # Add message to inform user about progress
 message(normal("Check business addresses in contractor sample"))
 
-cs_check_contractor_businesses(contractor.sample)
+css_check_contractor_businesses(contractor.sample)
 
 ### 11 - Check biomod numbers----
 
@@ -232,7 +232,7 @@ if(any(core.qa$diff < -config$paf_sample.threshold | core.qa$diff > config$paf_s
 # Add message to inform user about progress
 message(normal("Check data zones"))
 
-contractor.datazone.qa <- cs_check_contractor_datazones(sample = contractor.sample,
+contractor.datazone.qa <- css_check_contractor_datazones(sample = contractor.sample,
                                                      dz = dz_info,
                                                      hh.estimates = hh.est.dz)
 
@@ -241,7 +241,7 @@ contractor.datazone.qa <- cs_check_contractor_datazones(sample = contractor.samp
 # Add message to inform user about progress
 message(normal("Check simdq"))
 
-contractor.simdq.qa <- cs_check_contractor_simdq(sample = contractor.sample,
+contractor.simdq.qa <- css_check_contractor_simdq(sample = contractor.sample,
                                               previous.sample = contractor.sample.previous)
 
 ### 14 - Check urbrur in contractor sample ----
@@ -249,7 +249,7 @@ contractor.simdq.qa <- cs_check_contractor_simdq(sample = contractor.sample,
 # Add message to inform user about progress
 message(normal("Check urbrur"))
 
-contractor.urbrur.qa <- cs_check_contractor_urbrur(sample = contractor.sample,
+contractor.urbrur.qa <- css_check_contractor_urbrur(sample = contractor.sample,
                                                 previous.sample = contractor.sample.previous)
 
 ### *EXPORT* ----
@@ -280,7 +280,7 @@ qa <- list(contractor.sample = contractor.sample,
 
 # Export to Excel
 
-cs_qa_export(list_df = qa,
+css_qa_export(list_df = qa,
           survey = "shes")
 
 ### END OF SCRIPT ####

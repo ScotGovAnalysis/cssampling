@@ -11,7 +11,7 @@
 #' variables.
 #'
 #' @examples
-#' cs_multiple_occupancy(sample_frame = shes.sframe)
+#' css_multiple_occupancy(sample_frame = shes.sframe)
 
 # For addresses on the PAF with a multiple occupancy (MO) indicator
 # greater than 2, the size variable is set as the MO number.
@@ -64,7 +64,7 @@
 # addresses.
 
 
-cs_multiple_occupancy <- function(sample_frame) {
+css_multiple_occupancy <- function(sample_frame) {
   
   sframe <- sample_frame %>%
     

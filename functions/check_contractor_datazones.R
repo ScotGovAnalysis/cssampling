@@ -12,11 +12,11 @@
 #' between the two.
 #' 
 #' @examples
-#' cs_check_contractor_datazones(sample = contractor.sample,
+#' css_check_contractor_datazones(sample = contractor.sample,
 #'                            dz = dz_info,
 #'                            hh_estimates = hh.est.dz)
 
-cs_check_contractor_datazones <- function(sample, dz, hh.estimates){
+css_check_contractor_datazones <- function(sample, dz, hh.estimates){
   
   contractor.datazone.qa <- sample %>% 
     

@@ -7,9 +7,9 @@
 #' is included in the contractor or the reserve sample.
 #' 
 #' @examples
-#' cs_check_postcodes(total.sample)
+#' css_check_postcodes(total.sample)
 
-cs_check_postcodes <- function(sample){
+css_check_postcodes <- function(sample){
   
   # Add column indicating whether an address is part of the contractor sample 
   # or reserve sample

@@ -7,9 +7,9 @@
 #' For example, 'SHeS' becomes 'shes' rather than 's_he_s'.
 #' 
 #' @examples
-#' cs_clean_names_modified(x)
+#' css_clean_names_modified(x)
 
-cs_clean_names_modified <- function(data){
+css_clean_names_modified <- function(data){
   clean_names(data, 
               replace = c("SHeS" = "shes",
                           "SheS" = "shes",

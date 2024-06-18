@@ -41,7 +41,7 @@ message(title("Execute sampling script"))
 message(normal("Import data"))
 
 # Identify most recent used addresses file
-recent_usedaddresses <- cs_most_recent_file(path = here("lookups"), 
+recent_usedaddresses <- css_most_recent_file(path = here("lookups"), 
                                          pattern = "usedaddresses")
 
 # Import used addresses
@@ -57,18 +57,18 @@ clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
 # Import sample size file
 shs.samplesize <- read.csv(config$shs.samplesize.path, 
                                     header = TRUE, na = "") %>%
-  cs_clean_names_modified()
+  css_clean_names_modified()
 
 # Import SIMD ranks for datazones
 dz11_simd20 <- haven::read_sas(config$dz_simd.path) %>%
-  cs_clean_names_modified()
+  css_clean_names_modified()
 
 ### 2 - Used addresses ---- 
 
 # Add message to inform user about progress
 message(normal("Add metrics for active addresses"))
 
-shs.sframe <- cs_used_addresses(prev_samples = usedaddresses,
+shs.sframe <- css_used_addresses(prev_samples = usedaddresses,
                paf = clean_paf)
 nrow(shs.sframe)
 
@@ -77,7 +77,7 @@ nrow(shs.sframe)
 # Add message to inform user about progress
 message(normal("Create multiple occupancy indicator"))
 
-shs.sframe <- shs.sframe %>% cs_multiple_occupancy()
+shs.sframe <- shs.sframe %>% css_multiple_occupancy()
 nrow(shs.sframe)
 
 ### 4 - Sampling ---- 
@@ -95,14 +95,14 @@ shs.control <- c("dz11_urbrur2020",
 # a warning message will be displayed when executing the code below.
 # This is to be expected and nothing to be concerned about.
 shs.totalsample <- shs.sframe %>%
-  cs_sampling(stratum = "la_code",
+  css_sampling(stratum = "la_code",
            sample_size = shs.samplesize$total_n,
            prob = "totalsize",
            control = shs.control)
 
 # Merge sampling frame and drawn sample and sort data frame
 shs.frameandmatchedsample <- shs.sframe %>% 
-  cs_merge_frame_sample(shs.totalsample)
+  css_merge_frame_sample(shs.totalsample)
 
 ### 5 - Draw reserve sample ---- 
 
@@ -114,7 +114,7 @@ message(normal("Draw reserve sample"))
 # a warning message will be displayed when executing the code below.
 # This is to be expected and nothing to be concerned about.
 shs.reservesample <- shs.totalsample %>% 
-  cs_sampling(stratum = "la_code",
+  css_sampling(stratum = "la_code",
            sample_size = shs.samplesize$reserve_n,
            prob = rep(1/nrow(shs.totalsample), 
                       times = nrow(shs.totalsample)),
@@ -134,7 +134,7 @@ message(normal("Draw household condition sample"))
 shs.contractorsample <- shs.mainsample %>%
   
   # Draw house condition sample
-  cs_sampling(stratum = "la_code",
+  css_sampling(stratum = "la_code",
            sample_size = shs.samplesize$house_condition_n,
            prob = rep(1/nrow(shs.mainsample), 
                       times = nrow(shs.mainsample)),
@@ -159,7 +159,7 @@ nrow(shs.contractorsample)
 # Add message to inform user about progress
 message(normal("Prepare for export"))
 
-shs.contractor.export <- shs.contractorsample %>% cs_prepare_for_export()
+shs.contractor.export <- shs.contractorsample %>% css_prepare_for_export()
 
 ### 8 - Post-processing ---- 
 
@@ -167,10 +167,10 @@ shs.contractor.export <- shs.contractorsample %>% cs_prepare_for_export()
 message(normal("Post-process data"))
 
 # generate streams 1:4
-streams1 <- cs_stream_allocation(1, 4)
+streams1 <- css_stream_allocation(1, 4)
 
 # generate streams 5:12
-streams0 <- cs_stream_allocation(5, 12)
+streams0 <- css_stream_allocation(5, 12)
 
 # add streams to contractor sample
 shs.contractor.export <- shs.contractor.export %>%
@@ -190,7 +190,7 @@ shs.contractor.export <- shs.contractor.export %>%
                          stream))
 
 # Determine which households at multiple occupancy addresses gets interviewed
-shs.contractor.export <- shs.contractor.export %>% cs_selected_mo()
+shs.contractor.export <- shs.contractor.export %>% css_selected_mo()
 
 ### 9 - Export sample  ----
 
@@ -201,13 +201,13 @@ message(normal("Export sample"))
 # Current date is automatically added to file name to avoid 
 # overwriting existing files
 
-cs_export_rds(shs.totalsample)
+css_export_rds(shs.totalsample)
 
-cs_export_rds(shs.frameandmatchedsample)
+css_export_rds(shs.frameandmatchedsample)
 
-cs_export_rds(shs.contractorsample)
+css_export_rds(shs.contractorsample)
 
-cs_export_rds(shs.reservesample)
+css_export_rds(shs.reservesample)
 
 write.csv(shs.contractor.export, 
           paste0(shs.path,

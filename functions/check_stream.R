@@ -12,10 +12,10 @@
 #' stream occurrences.
 #' 
 #' @examples
-#' cs_check_stream(sample = contractor.sample,
+#' css_check_stream(sample = contractor.sample,
 #'              grouping_variable = la)
 
-cs_check_stream <- function(sample, grouping_variable, 
+css_check_stream <- function(sample, grouping_variable, 
                          additional_grouping_variable = NULL){
   
   # defuse grouping_variable

@@ -11,10 +11,10 @@
 #' for the function to work properly.
 #' 
 #' @examples
-#' cs_most_recent_file(getwd(), "paf")
-#' cs_most_recent_file(here("lookups"), "usedaddresses")
+#' css_most_recent_file(getwd(), "paf")
+#' css_most_recent_file(here("lookups"), "usedaddresses")
 
-cs_most_recent_file <- function(path, pattern){
+css_most_recent_file <- function(path, pattern){
   list.files(path = path,
              pattern = pattern) %>% 
     sort() %>% 

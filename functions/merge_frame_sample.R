@@ -14,10 +14,10 @@
 #' sample frame and the drawn sample.
 #'
 #' @examples
-#' cs_merge_frame_sample(sample_frame = shs.sframe, 
+#' css_merge_frame_sample(sample_frame = shs.sframe, 
 #'                    totalsample = shs.totalsample)
 
-cs_merge_frame_sample <- function(sample_frame, totalsample) {
+css_merge_frame_sample <- function(sample_frame, totalsample) {
   sample_frame %>%
   left_join(totalsample,
             by = join_by(udprn),

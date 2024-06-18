@@ -12,18 +12,18 @@
 #' current and previous sample. 
 #' 
 #' @examples
-#' cs_check_contractor_urbrur(sample = contractor.sample,
+#' css_check_contractor_urbrur(sample = contractor.sample,
 #'                         previous.sample = contractor.sample.previous)
 
-cs_check_contractor_urbrur <- function(sample, previous.sample){
+css_check_contractor_urbrur <- function(sample, previous.sample){
   
-  contractor.la.urbrur <- cs_la_grouping(df = sample,
+  contractor.la.urbrur <- css_la_grouping(df = sample,
                                       grouping_variable = dz11_urbrur2020) 
   
-  contractor.previous.la.urbrur <- cs_la_grouping(df = previous.sample,
+  contractor.previous.la.urbrur <- css_la_grouping(df = previous.sample,
                                                grouping_variable = dz11_urbrur2020)
   
-  contractor.urbrur.la.qa <- cs_prev_cur_comp(current_df = contractor.la.urbrur,
+  contractor.urbrur.la.qa <- css_prev_cur_comp(current_df = contractor.la.urbrur,
                                            previous_df = contractor.previous.la.urbrur)
   
   # Print warning if diff is greater or lower than the threshold
@@ -44,13 +44,13 @@ cs_check_contractor_urbrur <- function(sample, previous.sample){
   # Compare number and percentages of sampled addresses per urbrur 
   # classification with previous year
   
-  contractor.urbrur <- cs_calc_perc(sample, 
+  contractor.urbrur <- css_calc_perc(sample, 
                                  dz11_urbrur2020)
   
-  contractor.previous.urbrur <- cs_calc_perc(previous.sample, 
+  contractor.previous.urbrur <- css_calc_perc(previous.sample, 
                                           dz11_urbrur2020)
   
-  contractor.urbrur.qa <- cs_prev_cur_comp(contractor.urbrur, 
+  contractor.urbrur.qa <- css_prev_cur_comp(contractor.urbrur, 
                                         contractor.previous.urbrur) %>%
     select(-diff.n)
   

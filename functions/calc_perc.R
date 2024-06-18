@@ -8,10 +8,10 @@
 #' grouping_variable.
 #' 
 #' @examples
-#' cs_calc_perc(contractor.sample, dz11_urbrur2020)
+#' css_calc_perc(contractor.sample, dz11_urbrur2020)
 
 
-cs_calc_perc <- function(df, grouping_variable) {
+css_calc_perc <- function(df, grouping_variable) {
   group <- enquo(grouping_variable)
   df %>% 
   group_by(!!group) %>% 

@@ -10,10 +10,10 @@
 #' previous sample.
 #' 
 #' @examples
-#' cs_check_contractor_simdq(sample = contractor.sample,
+#' css_check_contractor_simdq(sample = contractor.sample,
 #'                        previous.sample = contractor.sample.previous)
 
-cs_check_contractor_simdq <- function(sample, previous.sample){
+css_check_contractor_simdq <- function(sample, previous.sample){
   
   add_simdq <- function(df){
     df %>% 
@@ -27,13 +27,13 @@ cs_check_contractor_simdq <- function(sample, previous.sample){
   
   contractor.la.simdq <- sample %>%
     add_simdq() %>%
-    cs_la_grouping(simdq)
+    css_la_grouping(simdq)
   
   contractor.previous.la.simdq <- previous.sample %>%
     add_simdq() %>%
-    cs_la_grouping(simdq)
+    css_la_grouping(simdq)
   
-  contractor.simdq.qa <- cs_prev_cur_comp(current_df = contractor.la.simdq,
+  contractor.simdq.qa <- css_prev_cur_comp(current_df = contractor.la.simdq,
                                        previous_df = contractor.previous.la.simdq)
   
   # Print warning if diff is lower or greater than threshold

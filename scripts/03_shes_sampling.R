@@ -41,43 +41,43 @@ message(title("Execute sampling script"))
 message(normal("Import data"))
 
 # Identify most recent used addresses file
-recent_usedaddresses <- cs_most_recent_file(path = here("lookups"), 
+recent_usedaddresses <- css_most_recent_file(path = here("lookups"), 
                                          pattern = "usedaddresses")
 
 # Import used addresses
 usedaddresses <- read_rds(paste0(here("lookups"), "/", recent_usedaddresses))
 
 # Identify most recent cleaned PAF
-recent_paf <- cs_most_recent_file(path = here("lookups"), pattern = "paf")
+recent_paf <- css_most_recent_file(path = here("lookups"), pattern = "paf")
 
 # Import cleaned PAF
 clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
 
 # Import SIMD ranks for datazones
 dz11_simd20 <- haven::read_sas(config$dz_simd.path) %>%
-  cs_clean_names_modified()
+  css_clean_names_modified()
 
 # Import sample size file
 shes.samplesize <- read.csv(config$shes.samplesize.path, 
                             header = TRUE, na = "") %>%
-  cs_clean_names_modified()
+  css_clean_names_modified()
 
 # Import SHeS cluster file
 shes_clusters <- read.csv(config$shes.clusters.path, 
                           header = TRUE, na = "") %>%
-  cs_clean_names_modified()
+  css_clean_names_modified()
 
 # import biomod file
 biomodsframe <- read.csv(config$biomod.path, 
                          header = TRUE, na = "") %>%
-  cs_clean_names_modified()
+  css_clean_names_modified()
 
 ### 2 - Used addresses ---- 
 
 # Add message to inform user about progress
 message(normal("Add metrics for active addresses"))
 
-shes.sframe <- cs_used_addresses(prev_samples = usedaddresses,
+shes.sframe <- css_used_addresses(prev_samples = usedaddresses,
                               paf = clean_paf)
 nrow(shes.sframe)
 
@@ -107,7 +107,7 @@ nrow(shes.sframe)
 # Add message to inform user about progress
 message(normal("Create multiple occupancy indicator"))
 
-shes.sframe <- shes.sframe %>% cs_multiple_occupancy()
+shes.sframe <- shes.sframe %>% css_multiple_occupancy()
 nrow(shes.sframe)
 
 ### 5 - Sampling ---- 
@@ -123,14 +123,14 @@ shes.control <- c("dz11_urbrur2020",
 
 # Draw stratified systematic sample
 shes.totalsample <- shes.sframe %>%
-  cs_sampling(stratum = "la_code",
+  css_sampling(stratum = "la_code",
            sample_size = shes.samplesize$total_n,
            prob = "totalsize",
            control = shes.control)
 
 # Merge sampling frame and drawn sample and sort data frame
 shes.frameandmatchedsample <- shes.sframe %>% 
-  cs_merge_frame_sample(shes.totalsample)
+  css_merge_frame_sample(shes.totalsample)
 
 ### 6 - Draw reserve sample ---- 
 
@@ -146,7 +146,7 @@ shes.totalsample.modules <- shes.totalsample %>%
 
 # Draw reserve sample
 shes.reservesample <- shes.totalsample.modules %>%
-  cs_sampling(stratum = "la_code",
+  css_sampling(stratum = "la_code",
            sample_size = shes.samplesize$total_reserve,
            prob = rep(1/nrow(shes.totalsample.modules), 
                       times = nrow(shes.totalsample.modules)),
@@ -176,7 +176,7 @@ biomod.control <- c("health_board",
                     "average_simd20_rank")
 
 biomodsample <- biomod %>%
-  cs_sampling(stratum = "stream",
+  css_sampling(stratum = "stream",
               sample_size = config$biomodsamplesize,
               prob = rep(1/nrow(biomod), 
                          times = nrow(biomod)),
@@ -204,7 +204,7 @@ child.samplesize <- shes.samplesize %>% filter(!shes_strata %in% c(235, 330, 360
 
 # Select the child boost sample from the contractor sample
 child.mainsample  <- child.sframe %>%
-  cs_sampling(stratum = "la_code",
+  css_sampling(stratum = "la_code",
            sample_size = child.samplesize$child_n,
            prob = rep(1/nrow(child.sframe), 
                       times = nrow(child.sframe)),
@@ -274,7 +274,7 @@ shes.full.contractorsample %>%
 # Add message to inform user about progress
 message(normal("Prepare for export"))
 
-shes.contractorsample.export <- cs_prepare_for_export(shes.full.contractorsample)
+shes.contractorsample.export <- css_prepare_for_export(shes.full.contractorsample)
 
 ### 11 - Export sample  ----
 
@@ -285,17 +285,17 @@ message(normal("Export sample"))
 # Current date is automatically added to file name to avoid 
 # overwriting existing files
 
-cs_export_rds(shes.totalsample)
+css_export_rds(shes.totalsample)
 
-cs_export_rds(shes.samplesize)
+css_export_rds(shes.samplesize)
 
-cs_export_rds(shes.frameandmatchedsample)
+css_export_rds(shes.frameandmatchedsample)
 
-cs_export_rds(shes.biomod.frameandmatchedsample)
+css_export_rds(shes.biomod.frameandmatchedsample)
 
-cs_export_rds(shes.full.contractorsample)
+css_export_rds(shes.full.contractorsample)
 
-cs_export_rds(shes.reservesample)
+css_export_rds(shes.reservesample)
 
 write.csv(shes.contractorsample.export, 
           paste0(shes.path,

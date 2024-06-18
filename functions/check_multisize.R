@@ -9,9 +9,9 @@
 #' between the two.
 #' 
 #' @examples
-#' cs_check_multisize(sample = total.sample, paf = paf)
+#' css_check_multisize(sample = total.sample, paf = paf)
 
-cs_check_multisize <- function(sample, paf){
+css_check_multisize <- function(sample, paf){
   
   # Check multi occupancy size for sample and PAF 
   # Sample %s should be similar to PAF
@@ -22,7 +22,7 @@ cs_check_multisize <- function(sample, paf){
     mutate(contractor_perc = contractor_n/sum(contractor_n)*100)
   
   total.multisize <- paf %>% 
-    cs_calc_perc(grouping_variable = multisize) %>%
+    css_calc_perc(grouping_variable = multisize) %>%
     group_by(multisize) %>%
     summarise(paf_n = n * multisize,
               paf_perc =  100 * paf_n/nrow(paf)) %>%

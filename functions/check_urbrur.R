@@ -7,9 +7,9 @@
 #' sample and sample frame.
 #' 
 #' @examples
-#' cs_urbrur.la.qa(df = shs.frameandmatchedsample)
+#' css_urbrur.la.qa(df = shs.frameandmatchedsample)
 
-cs_check_urbrur <- function(df){
+css_check_urbrur <- function(df){
   
   # Calculate urbrur percentage of sampled and non-sampled addresses
   # in each local authority

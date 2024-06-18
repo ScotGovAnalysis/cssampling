@@ -6,9 +6,9 @@
 #' and retains their filename in a new column to allow further inspection.
 #' 
 #' @examples
-#' cs_import_multiple_files_csv(files_del)
+#' css_import_multiple_files_csv(files_del)
 
-cs_import_multiple_files_csv <- function(filenames){
+css_import_multiple_files_csv <- function(filenames){
   df <- read.csv(filenames) %>%
     clean_names() %>%
     select(c("udprn"))

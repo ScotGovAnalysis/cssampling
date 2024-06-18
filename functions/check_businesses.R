@@ -5,9 +5,9 @@
 #' @returns Data frame with sampled business addresses
 #' 
 #' @examples
-#' cs_check_businesses(sample = total.sample)
+#' css_check_businesses(sample = total.sample)
 
-cs_check_businesses <- function(sample){
+css_check_businesses <- function(sample){
 
 # Inspect business addresses
 business.qa <- sample %>% 

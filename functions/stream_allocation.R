@@ -10,9 +10,9 @@
 #' @returns A data frame with randomly ordered streams.
 #'
 #' @examples
-#' cs_stream_allocation(1, 4)
+#' css_stream_allocation(1, 4)
 
-cs_stream_allocation <- function(start, finish){
+css_stream_allocation <- function(start, finish){
   
   # create sequence of number from 'start' to 'finish'
   # e.g., if start = 1 and finish = 4, then 1 2 3 4 will be created
