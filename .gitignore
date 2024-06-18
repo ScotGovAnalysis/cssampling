@@ -12,6 +12,7 @@ data/
 # Common text files that may contain data #
 *.[cC][sS][vV]
 *.[tT][xX][tT]
+!la_lookup.csv
 
 # Excel files #
 *.[xX][lL][sS]*
