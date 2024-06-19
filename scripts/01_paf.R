@@ -67,6 +67,9 @@ shes.strata <- read.csv(config$shes.strata.path,
                         header = TRUE, na = "") %>%
   css_clean_names_modified()
 
+# Import la lookup file
+la_lookup <- read.csv("la_lookup.csv")
+
 ### 2 - Postcode address file (PAF) ----
 
 # Add message to inform user about progress
@@ -261,71 +264,10 @@ nrow(paf_check)
 
 # Harmonise la and la_code variables
 final_paf <- paf_check %>%
-  mutate(la_code = 0,
-         la = ifelse(la_scode == "S12000033", "Aberdeen City", la),
-         la = ifelse(la_scode == "S12000034", "Aberdeenshire", la),
-         la = ifelse(la_scode == "S12000041", "Angus", la),
-         la = ifelse(la_scode == "S12000035", "Argyll and Bute", la),
-         la = ifelse(la_scode == "S12000005", "Clackmannanshire", la),
-         la = ifelse(la_scode == "S12000006", "Dumfries and Galloway", la),
-         la = ifelse(la_scode == "S12000042", "Dundee City", la),
-         la = ifelse(la_scode == "S12000008", "East Ayrshire", la),
-         la = ifelse(la_scode == "S12000045", "East Dunbartonshire", la),
-         la = ifelse(la_scode == "S12000010", "East Lothian", la),
-         la = ifelse(la_scode == "S12000011", "East Renfrewshire", la),
-         la = ifelse(la_scode == "S12000036", "City of Edinburgh", la),
-         la = ifelse(la_scode == "S12000013", "Na h-Eileanan Siar", la),
-         la = ifelse(la_scode == "S12000014", "Falkirk", la),
-         la = ifelse(la_scode == "S12000047", "Fife", la),
-         la = ifelse(la_scode == "S12000049", "Glasgow City", la),
-         la = ifelse(la_scode == "S12000017", "Highland", la),
-         la = ifelse(la_scode == "S12000018", "Inverclyde", la),
-         la = ifelse(la_scode == "S12000019", "Midlothian", la),
-         la = ifelse(la_scode == "S12000020", "Moray", la),
-         la = ifelse(la_scode == "S12000021", "North Ayrshire", la),
-         la = ifelse(la_scode == "S12000050", "North Lanarkshire", la),
-         la = ifelse(la_scode == "S12000023", "Orkney Islands", la),
-         la = ifelse(la_scode == "S12000048", "Perth and Kinross", la),
-         la = ifelse(la_scode == "S12000038", "Renfrewshire", la),
-         la = ifelse(la_scode == "S12000026", "Scottish Borders", la),
-         la = ifelse(la_scode == "S12000027", "Shetland Islands", la),
-         la = ifelse(la_scode == "S12000028", "South Ayrshire", la),
-         la = ifelse(la_scode == "S12000029", "South Lanarkshire", la),
-         la = ifelse(la_scode == "S12000030", "Stirling", la),
-         la = ifelse(la_scode == "S12000039", "West Dunbartonshire", la),
-         la = ifelse(la_scode == "S12000040", "West Lothian", la),
-         la_code = ifelse(la_scode == "S12000033", "100", la_code),
-         la_code = ifelse(la_scode == "S12000034", "110", la_code),
-         la_code = ifelse(la_scode == "S12000041", "120", la_code),
-         la_code = ifelse(la_scode == "S12000035", "130", la_code),
-         la_code = ifelse(la_scode == "S12000005", "150", la_code),
-         la_code = ifelse(la_scode == "S12000006", "170", la_code),
-         la_code = ifelse(la_scode == "S12000042", "180", la_code),
-         la_code = ifelse(la_scode == "S12000008", "190", la_code),
-         la_code = ifelse(la_scode == "S12000045", "200", la_code),
-         la_code = ifelse(la_scode == "S12000010", "210", la_code),
-         la_code = ifelse(la_scode == "S12000011", "220", la_code),
-         la_code = ifelse(la_scode == "S12000036", "230", la_code),
-         la_code = ifelse(la_scode == "S12000013", "235", la_code),
-         la_code = ifelse(la_scode == "S12000014", "240", la_code),
-         la_code = ifelse(la_scode == "S12000047", "250", la_code),
-         la_code = ifelse(la_scode == "S12000049", "260", la_code),
-         la_code = ifelse(la_scode == "S12000017", "270", la_code),
-         la_code = ifelse(la_scode == "S12000018", "280", la_code),
-         la_code = ifelse(la_scode == "S12000019", "290", la_code),
-         la_code = ifelse(la_scode == "S12000020", "300", la_code),
-         la_code = ifelse(la_scode == "S12000021", "310", la_code),
-         la_code = ifelse(la_scode == "S12000050", "320", la_code),
-         la_code = ifelse(la_scode == "S12000023", "330", la_code),
-         la_code = ifelse(la_scode == "S12000048", "340", la_code),
-         la_code = ifelse(la_scode == "S12000038", "350", la_code),
-         la_code = ifelse(la_scode == "S12000026", "355", la_code),
-         la_code = ifelse(la_scode == "S12000027", "360", la_code),
-         la_code = ifelse(la_scode == "S12000028", "370", la_code),
-         la_code = ifelse(la_scode == "S12000029", "380", la_code),
-         la_code = ifelse(la_scode == "S12000030", "390", la_code),
-         la_code = ifelse(la_scode == "S12000039", "395", la_code),
-         la_code = ifelse(la_scode == "S12000040", "400", la_code))
+  left_join(la_lookup, 
+            by = join_by(la_scode), 
+            suffix = c(".x", "")) %>%
+  select(-ends_with(".x"))
 
 # Check harmonisation was successful 
 # (all local authorities should have more than 1000 addresses)
