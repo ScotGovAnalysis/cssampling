@@ -23,7 +23,7 @@
 #'                   stratum = "la_code",
 #'                   sample_size = child.samplesize$child_n,
 #'                   prob = rep(1/nrow(child.sframe), times = nrow(child.sframe)),
-#'                   control = c))
+#'                   control = shes.control))
 
 css_sampling <- function(df, stratum, sample_size, prob, control){
   
