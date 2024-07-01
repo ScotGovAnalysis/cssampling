@@ -30,10 +30,14 @@ css_sampling <- function(df, stratum, sample_size, prob, control){
   # Order sampling frame prior to drawing the sample
   order.var <- c(stratum, control) 
   df <- df %>% arrange(across({{ order.var }}))
-  
+
   # reassign probability if function argument was a string
   # the previous steps reorders the data frame
   # this step ensures that this new order is reflected in prob
+  # this step is only applicable if prob is a column of df
+  # if all records have an equal selection probability
+  # (e.g., prob = rep(1/nrow(child.sframe), times = nrow(child.sframe)), 
+  # this step is skipped
   if(is.character(prob) == TRUE) {
     # remove addresses with selection probability of 0
     df <- df %>% filter(eval(rlang::parse_expr(prob)) != 0)
