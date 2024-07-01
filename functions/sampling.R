@@ -12,14 +12,14 @@
 #' @param sample_size Name of the data table which includes the 
 #' sample size.
 #'
-#' @param prob Vector with selection probabilites of all addresses in df.
+#' @param prob Vector with selection probabilities of all addresses in df.
 #' 
 #' @param control Name of variables the df is sorted by prior to sampling.
 #' 
 #' @returns Data frame of sampled addresses.
 #' 
 #' @examples
-#' css_sampling(sampling(df = child.sframe, 
+#' css_sampling(df = child.sframe, 
 #'                   stratum = "la_code",
 #'                   sample_size = child.samplesize$child_n,
 #'                   prob = rep(1/nrow(child.sframe), times = nrow(child.sframe)),
@@ -31,11 +31,11 @@ css_sampling <- function(df, stratum, sample_size, prob, control){
   order.var <- c(stratum, control) 
   df <- df %>% arrange(across({{ order.var }}))
   
-  # reassign probability if argument was a string
+  # reassign probability if function argument was a string
   # the previous steps reorders the data frame
   # this step ensures that this new order is reflected in prob
   if(is.character(prob) == TRUE) {
-    # remove addresses with slection probability of 0
+    # remove addresses with selection probability of 0
     df <- df %>% filter(eval(rlang::parse_expr(prob)) != 0)
     prob <- df[[as.name(prob)]]
   }
