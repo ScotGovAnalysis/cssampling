@@ -185,4 +185,5 @@ css_qa_export <- function(list_df, survey){
                                config$syear,
                                " - QA.xlsx"), 
              overwrite = TRUE)
+  openXL(wb)
   }

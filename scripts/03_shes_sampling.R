@@ -299,6 +299,8 @@ css_export_rds(shes.reservesample)
 
 write.csv(shes.contractorsample.export, 
           paste0(shes.path,
+                 Sys.Date(),
+                 "_",
                  "shes.contractorsample.",
                  config$syear,
                  ".csv"),

@@ -74,6 +74,7 @@ css_multiple_occupancy <- function(sample_frame) {
     # Select relevant variables
     select(any_of(c(
       "udprn",
+      "uprn",
       "organisation",
       "property",
       "street",

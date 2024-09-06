@@ -163,6 +163,8 @@ css_export_rds(scjs.reservesample)
 
 write.csv(scjs.contractor.export, 
           paste0(scjs.path,
+                 Sys.Date(),
+                 "_",
                  "scjs.contractorsample.",
                  config$syear,
                  ".csv"),
