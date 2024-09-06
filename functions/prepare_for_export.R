@@ -20,7 +20,7 @@ css_prepare_for_export <- function(df){
     mutate(property = as.character(property)) %>%
     
     # select relevant variables
-    select(any_of(c(
+    select(any_of(c("uprn",
       "udprn", "organisation", "property", "street"," locality", 
       "town", "postcode", "print_address", "datazone", "dz11", 
       "xcoord", "ycoord", "health_board", "hb_code", "la", 
