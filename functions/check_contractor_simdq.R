@@ -36,6 +36,20 @@ css_check_contractor_simdq <- function(sample, previous.sample){
   contractor.simdq.qa <- css_prev_cur_comp(current_df = contractor.la.simdq,
                                        previous_df = contractor.previous.la.simdq)
   
+  # add explanation to cover sheet of QA output
+  cover <- c("contractor.simdq.la", paste0("This sheet compares the SIMDQ by LA distribution ",
+                                          "in the drawn sample and the previous sample. ",
+                                          "The difference between current and previous ",
+                                          "sample should be between ",
+                                          ifelse(survey == "shes",
+                                                 -config$shes.simdq.threshold,
+                                                 -config$simdq.threshold),
+                                          " and ",
+                                          ifelse(survey == "shes",
+                                                 config$shes.simdq.threshold,
+                                                 config$simdq.threshold),
+                                          "."))
+  
   # Print warning if diff is lower or greater than threshold
   {
     if (any(contractor.simdq.qa %>% 
@@ -50,5 +64,5 @@ css_check_contractor_simdq <- function(sample, previous.sample){
                     "the difference between previous and current sample is greater than expected"))}
   }
   
-  return(contractor.simdq.qa)
+  return(list(cover, contractor.simdq.qa))
 }

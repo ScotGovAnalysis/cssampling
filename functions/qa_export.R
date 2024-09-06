@@ -23,9 +23,25 @@ css_qa_export <- function(list_df, survey){
     
     # loop through list of objects and write each in separate sheet
     
+    # bold style
+    header_st <- createStyle(textDecoration = "Bold")
+    
     writeData(wb, 
             sheet = sheet,
-            x = data)
+            x = data,
+            headerStyle = header_st)
+    
+    # change column width on cover sheet, wrap text
+    if(i == 1){
+      setColWidths(wb, sheet, cols = 1:ncol(data), widths = c(25, 60))
+      cover_st <- createStyle(wrapText = TRUE)
+      addStyle(wb, 
+               sheet = sheet, 
+               style = cover_st, 
+               rows = 1:nrow(data)+1, 
+               cols = 2, 
+               stack = TRUE)
+    }
     
     # add conditional formatting to relevant columns
     

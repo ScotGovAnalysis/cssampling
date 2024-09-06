@@ -172,13 +172,13 @@ multisize.qa <- css_check_multisize(sample = total.sample, paf = paf)
 message(normal("Check SIMD by LA"))
 
 contractor.simd.la.qa <- css_check_contractor_simd(sample = contractor.sample, 
-                                            paf.simd = simd.la.qa[[2]],
+                                            paf.simd = simd.la.qa[[4]],
                                             grouping_variable = la)
 
 message(normal("Check SIMD by health board"))
 
 contractor.simd.hb.qa <- css_check_contractor_simd(sample = contractor.sample, 
-                                               paf.simd = simd.hb.qa[[2]],
+                                               paf.simd = simd.hb.qa[[4]],
                                                grouping_variable = hb_code)
 
 ### 10 - Check business addresses in contractor sample ----
@@ -203,6 +203,12 @@ contractor.biomod.qa <- contractor.sample %>%
   mutate(across(starts_with("sample"), ~replace(., is.na(.), 0)),
          total = rowSums(across(starts_with("sample"))))
 
+contractor.biomod.qa <- list(c("contractor.biomod", 
+                               paste0("This sheet shows the drawn sample broken ",
+                                      "down by sample type (i.e., Core (NON) Bio, ",
+                                      "Core Bio or Child) and cluster. ")),
+                             contractor.biomod.qa)
+
 table(shes.biomod.frameandmatchedsample$health_board, 
       shes.biomod.frameandmatchedsample$biomod)
 
@@ -222,10 +228,20 @@ core.qa <- contractor.sample %>%
 
 if(any(core.qa$diff < -config$paf_sample.threshold | core.qa$diff > config$paf_sample.threshold)){
   warning(print(paste0("For at least one local authority,",
-                       "the difference in urban/rural classification",
+                       "the difference in mean urban/rural classification",
                        "between core bio and core non-bio",
-                       "is greater than expected")))
+                       "is greater than expected.")))
 }
+
+core.qa <- list(c("contractor.urbrur.core", paste0("This sheet compares the mean urban/rural ",
+                                                   "classification in each LA of the Core (NON) ",
+                                                   "Bio and Core Bio samples. ",
+                                                   "The values in the diff column should be between ",
+                                                   -config$paf_sample.threshold,
+                                                   " and ",
+                                                   config$paf_sample.threshold,
+                                                   ".")),
+                core.qa)
 
 ### 12 - Check data zones in contractor sample ----
 
@@ -259,24 +275,46 @@ contractor.urbrur.qa <- css_check_contractor_urbrur(sample = contractor.sample,
 # Add message to inform user about progress
 message(normal("Export"))
 
+# create cover data frame
+cover <- tibble::tribble(~sheet, ~explanation,
+                         "contractor.sample", "This sheet shows the drawn contractor sample.")
+cover <- rbind(cover,
+               contractor.sample.size.check[[1]],
+               udprn.qa[[1]],
+               simd.la.qa[[1]],
+               simd.hb.qa[[1]],
+               urbrur.la.qa[[1]],
+               pcode[[1]],
+               business.qa[[1]],
+               multisize.qa[[1]],
+               contractor.simd.la.qa[[1]],
+               contractor.simd.hb.qa[[1]],
+               contractor.biomod.qa[[1]],
+               contractor.datazone.qa[[1]],
+               contractor.simdq.qa[[1]],
+               contractor.urbrur.qa[[1]],
+               contractor.urbrur.qa[[2]],
+               core.qa[[1]])
+
 # Create list of all objects to be exported
-qa <- list(contractor.sample = contractor.sample,
-           contractor.sample.size = contractor.sample.size.check,
-           previously.sampled.udprn = udprn.qa,
-           simd.la = simd.la.qa[[3]],
-           simd.hb = simd.hb.qa[[3]],
-           urbrur.la = urbrur.la.qa,
-           sampled.postcodes = pcode,
-           business.addresses = business.qa,
-           multisize = multisize.qa,
-           contractor.simd.la = contractor.simd.la.qa,
-           contractor.simd.hb = contractor.simd.hb.qa,
-           contractor.biomod = contractor.biomod.qa,
-           contractor.datazone = contractor.datazone.qa,
-           contractor.simdq.la = contractor.simdq.qa,
-           contractor.urbrur = contractor.urbrur.qa[[2]],
-           contractor.urbrur.la = contractor.urbrur.qa[[1]],
-           contractor.urbrur.core = core.qa)
+qa <- list(cover = cover,
+           contractor.sample = contractor.sample,
+           contractor.sample.size = contractor.sample.size.check[[2]],
+           previously.sampled.udprn = udprn.qa[[2]],
+           simd.la = simd.la.qa[[4]],
+           simd.hb = simd.hb.qa[[4]],
+           urbrur.la = urbrur.la.qa[[2]],
+           sampled.postcodes = pcode[[2]],
+           business.addresses = business.qa[[2]],
+           multisize = multisize.qa[[2]],
+           contractor.simd.la = contractor.simd.la.qa[[2]],
+           contractor.simd.hb = contractor.simd.hb.qa[[2]],
+           contractor.biomod = contractor.biomod.qa[[2]],
+           contractor.datazone = contractor.datazone.qa[[2]],
+           contractor.simdq.la = contractor.simdq.qa[[2]],
+           contractor.urbrur = contractor.urbrur.qa[[4]],
+           contractor.urbrur.la = contractor.urbrur.qa[[3]],
+           contractor.urbrur.core = core.qa[[2]])
 
 # Export to Excel
 

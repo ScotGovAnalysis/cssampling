@@ -17,6 +17,15 @@ css_check_postcodes <- function(sample){
     count(postcode) %>% 
     arrange(desc(n))
   
+  # add explanation to cover sheet of QA output
+  cover <- c("sampled.postcodes", paste0("This sheet shows the frequency of all ",
+                                         "sampled postcodes in descending order. ",
+                                          "No postcode should have been sample dmore than ",
+                                         ifelse(survey == "shes", 
+                                                config$shes.postcode.threshold,
+                                                config$postcode.threshold),
+                                         " times."))
+  
   # Check if any postcode has been sampled more than the threshold and if so
   # print warning
   {
@@ -27,6 +36,6 @@ css_check_postcodes <- function(sample){
                     " Check Excel file to confirm these are all small postcodes."))}
     }
 
-  return(pcode)
+  return(list(cover, pcode))
   
 }

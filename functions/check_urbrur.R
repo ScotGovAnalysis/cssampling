@@ -27,6 +27,15 @@ css_check_urbrur <- function(df){
            diff = selected_No - selected_Yes) %>%
     select(-contains("_NA"))
   
+  # add explanation to cover sheet of QA output
+  cover <- c("urbrur.la", paste0("This sheet compares the urban/rural distribution of ",
+                               "selected and unselected addresses in each LA in the sampling frame. ",
+                               "The diff column should be between ", 
+                               -config$paf_sample.threshold, 
+                               " and ", 
+                               config$paf_sample.threshold,
+                               "."))
+  
   # Print warning if diff is too great
   {
     if (min(urbrur.la.qa$diff) < -config$paf_sample.threshold | max(urbrur.la.qa$diff) > config$paf_sample.threshold)
@@ -34,6 +43,6 @@ css_check_urbrur <- function(df){
                  "between the sampled and non-sampled addresses is greater than expected"))}
     }
   
-  return(urbrur.la.qa)
+  return(list(cover, urbrur.la.qa))
   
 }

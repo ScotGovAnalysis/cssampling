@@ -158,7 +158,7 @@ multisize.qa <- css_check_multisize(sample = total.sample, paf = paf)
 message(normal("Check SIMD"))
 
 contractor.simd.qa <- css_check_contractor_simd(sample = contractor.sample, 
-                                            paf.simd = simd.qa[[2]],
+                                            paf.simd = simd.qa[[3]],
                                             grouping_variable = la)
 
 ### 10 - Check business addresses in contractor sample ----
@@ -205,21 +205,40 @@ contractor.urbrur.qa <- css_check_contractor_urbrur(sample = contractor.sample,
 # Add message to inform user about progress
 message(normal("Export"))
 
+# create cover data frame
+cover <- tibble::tribble(~sheet, ~explanation,
+                         "contractor.sample", "This sheet shows the drawn contractor sample.")
+cover <- rbind(cover,
+               contractor.sample.size.check[[1]],
+               udprn.qa[[1]],
+               simd.qa[[1]],
+               urbrur.la.qa[[1]],
+               pcode[[1]],
+               business.qa[[1]],
+               multisize.qa[[1]],
+               contractor.simd.qa[[1]],
+               contractor.stream.qa[[1]],
+               contractor.datazone.qa[[1]],
+               contractor.simdq.qa[[1]],
+               contractor.urbrur.qa[[1]],
+               contractor.urbrur.qa[[2]])
+
 # Create list of all objects to be exported
-qa <- list(contractor.sample = contractor.sample,
-        contractor.sample.size = contractor.sample.size.check,
-        previously.sampled.udprn = udprn.qa,
-        simd.la = simd.qa[[3]],
-        urbrur.la = urbrur.la.qa,
-        sampled.postcodes = pcode,
-        business.addresses = business.qa,
-        multisize = multisize.qa,
-        contractor.simd.la = contractor.simd.qa,
-        contractor.stream.la = contractor.stream.qa,
-        contractor.datazone = contractor.datazone.qa,
-        contractor.simdq.la = contractor.simdq.qa,
-        contractor.urbrur = contractor.urbrur.qa[[2]],
-        contractor.urbrur.la = contractor.urbrur.qa[[1]])
+qa <- list(cover = cover,
+           contractor.sample = contractor.sample,
+           contractor.sample.size = contractor.sample.size.check[[2]],
+           previously.sampled.udprn = udprn.qa[[2]],
+           simd.la = simd.qa[[4]],
+           urbrur.la = urbrur.la.qa[[2]],
+           sampled.postcodes = pcode[[2]],
+           business.addresses = business.qa[[2]],
+           multisize = multisize.qa[[2]],
+           contractor.simd.la = contractor.simd.qa[[2]],
+           contractor.stream.la = contractor.stream.qa[[2]],
+           contractor.datazone = contractor.datazone.qa[[2]],
+           contractor.simdq.la = contractor.simdq.qa[[2]],
+           contractor.urbrur = contractor.urbrur.qa[[4]],
+           contractor.urbrur.la = contractor.urbrur.qa[[3]])
 
 # Export to Excel
 

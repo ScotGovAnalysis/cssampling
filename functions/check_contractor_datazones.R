@@ -44,6 +44,16 @@ css_check_contractor_datazones <- function(sample, dz, hh.estimates){
            diff = perc_hh - perc_sample) %>%
     ungroup()
   
+  # add explanation to cover sheet of QA output
+  cover <- c("contractor.datazone", paste0("This sheet compares the datazone distribution ",
+                                 "in the drawn sample and the occupied dwellings. ",
+                                 "The diff column indicates the difference between ",
+                                 "the two which should be between ",
+                                 -config$paf_sample.threshold,
+                                 " and ",
+                                 config$paf_sample.threshold,
+                                 "."))
+  
   # Print warning if diff is lower or greater than threshold
   {
     if (min(contractor.datazone.qa$diff) < -config$paf_sample.threshold | 
@@ -52,5 +62,5 @@ css_check_contractor_datazones <- function(sample, dz, hh.estimates){
                  "in the sample is greater or lower than expected"))}
     }
   
-  return(contractor.datazone.qa)
+  return(list(cover, contractor.datazone.qa))
 }

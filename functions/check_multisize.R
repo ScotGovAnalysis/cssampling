@@ -36,6 +36,16 @@ css_check_multisize <- function(sample, paf){
     replace(is.na(.), 0) %>%
     mutate(diff = contractor_perc - paf_perc)
   
+  # add explanation to cover sheet of QA output
+  cover <- c("multisize", paste0("This sheet compares the multisize distribution ",
+                                 "in the drawn sample with the sampling frame. ",
+                                 "The difference for each multisize category ",
+                                 "between sample and PAF should be between ",
+                                 -config$paf_sample.threshold,
+                                 " and ",
+                                 config$paf_sample.threshold,
+                                 "."))
+  
   # Print warning if diff is greater or lower than threshold
   {
     if (min(multisize.qa$diff) < -config$paf_sample.threshold | 
@@ -45,5 +55,5 @@ css_check_multisize <- function(sample, paf){
                  "is greater than expected"))}
     }
   
-  return(multisize.qa)
+  return(list(cover, multisize.qa))
 }

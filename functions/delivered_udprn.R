@@ -43,13 +43,20 @@ css_delivered_udprn <- function(sampling_year, filepath){
   udprn.qa <- prev.samples %>%
     filter(udprn %in% contractor.sample$udprn)
   
+  # add explanation to cover sheet of QA output
+  cover <- c("previously.sampled.udprn", paste0("This sheet compares shows udprns ",
+                                                  "that were sampled in the last ",
+                                                  "4 years. This sheet should be empty ",
+                                                  "unless OCS drew samples for additional ",
+                                                  "surveys (such as FSS in 2023)."))
+  
   # Print warning if drawn sample includes previously sampled addresses
   {
     if (nrow(udprn.qa) != 0)
     {warning("Drawn sample includes previously sampled addresses")}
   }
   
-  return(udprn.qa)
+  return(list(cover, udprn.qa))
 }
 
 

@@ -26,6 +26,20 @@ css_check_contractor_urbrur <- function(sample, previous.sample){
   contractor.urbrur.la.qa <- css_prev_cur_comp(current_df = contractor.la.urbrur,
                                            previous_df = contractor.previous.la.urbrur)
   
+  # add explanation to cover sheet of QA output
+  cover <- c("contractor.urbrur", paste0("This sheet compares the urban/rural distribution ",
+                                         "in the drawn sample and the previous sample. ",
+                                         "The difference between current and previous ",
+                                         "sample should be between ",
+                                         ifelse(survey == "shes",
+                                                -config$shes.urbrur.threshold,
+                                                -config$paf_sample.threshold),
+                                         " and ",
+                                         ifelse(survey == "shes",
+                                                config$shes.urbrur.threshold,
+                                                config$paf_sample.threshold),
+                                         "."))
+  
   # Print warning if diff is greater or lower than the threshold
   {
     if (any(contractor.urbrur.la.qa %>% 
@@ -54,6 +68,16 @@ css_check_contractor_urbrur <- function(sample, previous.sample){
                                         contractor.previous.urbrur) %>%
     select(-diff.n)
   
+  cover2 <- c("contractor.urbrur.la", 
+                paste0("This sheet compares the urban/rural by LA distribution ",
+                       "in the drawn sample and the previous sample. ",
+                       "The difference between current and previous ",
+                       "sample should be between ",
+                       -config$paf_sample.threshold,
+                       " and ",
+                       config$paf_sample.threshold,
+                       "."))
+  
   # Print warning if diff is greater or lower than threshold
   {
     if (any(contractor.urbrur.qa %>% select(starts_with("diff")) < -config$paf_sample.threshold |
@@ -63,6 +87,6 @@ css_check_contractor_urbrur <- function(sample, previous.sample){
                  "last year's sample"))}
     }
   
-  return(list(contractor.urbrur.la.qa, contractor.urbrur.qa))
+  return(list(cover, cover2, contractor.urbrur.la.qa, contractor.urbrur.qa))
   
 }

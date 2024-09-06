@@ -20,12 +20,18 @@ css_check_sample_size <- function(df, sample.size){
     select(la_code, drawn_n, contractor_n) %>%
     mutate(diff = contractor_n - drawn_n)
   
+  # add explanation to cover sheet of QA output
+  cover <- c("contractor.sample.size", paste0("This sheet compares the drawn ",
+                                                  "contractor sample to the ",
+                                                  "sampling specifications. ",
+                                                  "The diff column should be green."))
+  
   # Print warning if diff is not 0
   {
     if (any(contractor.sample.size.check$diff != 0))
     {stop("Drawn sample does not meet sample size requirements")}
     }
   
-  return(contractor.sample.size.check)
+  return(list(cover, contractor.sample.size.check))
   
 }

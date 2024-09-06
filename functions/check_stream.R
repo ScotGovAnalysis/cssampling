@@ -42,6 +42,28 @@ css_check_stream <- function(sample, grouping_variable,
            check = max-min) %>%
     select(-c(max, min))
   
+  # add explanation to cover sheet of QA output
+  if(missing(additional_grouping_variable)){
+  cover <- c("contractor.stream.la", paste0("This sheet shows the stream allocation by LA. ",
+                                 "The check column indicates the difference between ",
+                                 "the minimum and maximum value of each row. ",
+                                 "The value in the check column should not exceed ",
+                                 ifelse(survey == "scjs", 
+                                        config$scjs.stream.threshold,
+                                        config$shs.stream.threshold)))}
+  
+  if(!missing(additional_grouping_variable)){
+    cover <- c("contractor.stream.urbrur", paste0("This sheet shows the stream allocation by LA ",
+                                                  "and urban/rural classification. ",
+                                              "The check column indicates the difference between ",
+                                              "the minimum and maximum value of each row. ",
+                                              "The value in the check column should not exceed ",
+                                              ifelse(survey == "scjs", 
+                                                     config$scjs.stream.threshold,
+                                                     config$shs.stream.threshold),
+                                              "."))}
+  
+  
   # perform check if survey is SCJS
   if(survey == "scjs") {
     # check streams are equally distributed per local authority
@@ -60,5 +82,5 @@ css_check_stream <- function(sample, grouping_variable,
     }
   }
   
-  return(contractor.stream.qa)
+  return(list(cover, contractor.stream.qa))
 }

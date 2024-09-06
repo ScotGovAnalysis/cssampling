@@ -44,6 +44,23 @@ css_check_mean_simd <- function(total.sample, paf, grouping_variable) {
            overlap = ifelse(lower.ci_sample < mean_paf & upper.ci_sample > mean_paf,
                             "yes", "no"))
   
+  # add explanation to cover sheet of QA output
+  if(as_label(group) == "la"){
+  cover <- c("simd.la", paste0("This sheet compares the SIMD by LA distribution ",
+                                                  "in the drawn sample with the sampling frame. ",
+                                                  "The confidence intervals of the sample ",
+                                                  "should overlap with the PAF. ",
+                                                  "Hence, the overlap column should be green."))
+  }
+  
+  if(as_label(group) == "hb_code"){
+    cover <- c("hb.la", paste0("This sheet compares the SIMD by Health Board distribution ",
+                                 "in the drawn sample with the sampling frame. ",
+                                 "The confidence intervals of the sample ",
+                                 "should overlap with the PAF. ",
+                                 "Hence, the overlap column should be green."))
+  }
+  
   # Print warning if there is overlap between sample CIs and PAF
   # Note: There usually is not overlap in Glasgow.
   # This is to be expected and no cause for concern.
@@ -52,6 +69,6 @@ css_check_mean_simd <- function(total.sample, paf, grouping_variable) {
     {warning("The SIMD statistic of at least one sampled address does not overlap with the SIMD of the PAF")}
     }
   
-  return(list(sample.simd, paf.simd, simd.qa))
+  return(list(cover, sample.simd, paf.simd, simd.qa))
   
 }
