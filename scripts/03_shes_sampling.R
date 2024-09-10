@@ -297,11 +297,32 @@ css_export_rds(shes.full.contractorsample)
 
 css_export_rds(shes.reservesample)
 
+# total contractor sample
 write.csv(shes.contractorsample.export, 
           paste0(shes.path,
                  Sys.Date(),
                  "_",
                  "shes.contractorsample.",
+                 config$syear,
+                 ".csv"),
+          row.names = FALSE)
+
+# export child boost sample separately (to be sent to PHS)
+write.csv(shes.contractorsample.export %>% filter(child_boost == 1), 
+          paste0(shes.path,
+                 Sys.Date(),
+                 "_",
+                 "childboost_ shes.contractorsample.",
+                 config$syear,
+                 ".csv"),
+          row.names = FALSE)
+
+# export core sample separately (to be sent to contractor)
+write.csv(shes.contractorsample.export %>% filter(child_boost != 1), 
+          paste0(shes.path,
+                 Sys.Date(),
+                 "_",
+                 "core_shes.contractorsample.",
                  config$syear,
                  ".csv"),
           row.names = FALSE)

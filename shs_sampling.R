@@ -21,8 +21,9 @@ source(here::here("scripts", "00_setup.R"))
 
 ### 1 - PAF ----
 
-# Check if PAF script has been run with most recent PAF file
-# If it hasn't been run, run PAF script
+# The following code checks if the PAF script has been run 
+# with the most recent PAF file; if it hasn't been run already,
+# the PAF script gets executed
 if(!any(grepl(paf_v, paf_list))){
   source(here::here("scripts", "01_paf.R"))
 }

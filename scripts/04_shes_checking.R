@@ -54,11 +54,16 @@ recent_biomod.frameandmatchedsample <- css_most_recent_file(path = shes.path,
 shes.biomod.frameandmatchedsample <- read_rds(paste0(shes.path, "/", 
                                                 recent_biomod.frameandmatchedsample))
 
+# Identify most recent contractor sample
+sample_fname <- paste0("_shes.contractorsample.",
+            config$syear,
+            ".csv")
+recent.contractor.sample <- css_most_recent_file(path = shes.path, 
+                                                 pattern = sample_fname)
+
 # Import contractor sample
 contractor.sample <- read.csv(paste0(shes.path,
-                                     "shes.contractorsample.",
-                                     config$syear,
-                                     ".csv")) %>%
+                                     recent.contractor.sample)) %>%
   css_clean_names_modified()
 
 # Import sample size information
