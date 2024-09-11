@@ -297,8 +297,8 @@ cover <- rbind(cover,
                contractor.biomod.qa[[1]],
                contractor.datazone.qa[[1]],
                contractor.simdq.qa[[1]],
-               contractor.urbrur.qa[[1]],
                contractor.urbrur.qa[[2]],
+               contractor.urbrur.qa[[1]],
                core.qa[[1]])
 
 # Create list of all objects to be exported

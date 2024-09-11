@@ -27,7 +27,7 @@ css_check_contractor_urbrur <- function(sample, previous.sample){
                                            previous_df = contractor.previous.la.urbrur)
   
   # add explanation to cover sheet of QA output
-  cover <- c("contractor.urbrur", paste0("This sheet compares the urban/rural distribution ",
+  cover <- c("contractor.urbrur.la", paste0("This sheet compares the urban/rural by LA distribution",
                                          "in the drawn sample and the previous sample. ",
                                          "The difference between current and previous ",
                                          "sample should be between ",
@@ -68,8 +68,8 @@ css_check_contractor_urbrur <- function(sample, previous.sample){
                                         contractor.previous.urbrur) %>%
     select(-diff.n)
   
-  cover2 <- c("contractor.urbrur.la", 
-                paste0("This sheet compares the urban/rural by LA distribution ",
+  cover2 <- c("contractor.urbrur", 
+                paste0("This sheet compares the urban/rural distribution ",
                        "in the drawn sample and the previous sample. ",
                        "The difference between current and previous ",
                        "sample should be between ",
