@@ -18,6 +18,12 @@
 # Note: A new PAF file needs to be requested from NRS every 6-12 months. 
 # The current script then needs to be re-run to update the sampling frame.
 
+# Sept 2025: For the 2026 sampling, the PAF extract includes the variable 
+# 2022Datazone for the first time. However, all processing is still based
+# on 2011Datazone to maintain consistency with SHeS clusters which have
+# been calculated using 2011 data zones. When the new SHeS cluster cycle
+# starts (2028 sample), the 2022 datazones should be used.
+
 #########################################################################
 
 # clear environment
@@ -46,7 +52,8 @@ rawpaf <-  read_csv(config$infilenm.path,
                     col_select = c(Organisation, Property, Street, 
                                    Locality, Town, Postcode, PrintAddress,
                                    Multi_occupancy, CouncilArea, UDPRN,
-                                   YCOORD, XCOORD, "2011Datazone", LACode, 
+                                   YCOORD, XCOORD, "2011Datazone", 
+                                   "2022Datazone", LACode, 
                                    UPRN, CouncilTaxBand),
                     show_col_types = FALSE) %>%
   css_clean_names_modified() %>%
