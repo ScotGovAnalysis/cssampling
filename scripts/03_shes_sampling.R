@@ -110,7 +110,7 @@ message(normal("Create multiple occupancy indicator"))
 shes.sframe <- shes.sframe %>% css_multiple_occupancy()
 nrow(shes.sframe)
 
-### 5 - Sampling ---- 
+### 5 - Draw main sample ---- 
 
 # Add message to inform user about progress
 message(normal("Draw sample"))
@@ -203,16 +203,47 @@ child.sframe <- shes.contractorsample %>% filter(!la_code %in% c(235, 330, 360))
 child.samplesize <- shes.samplesize %>% filter(!shes_strata %in% c(235, 330, 360))
 
 # Select the child boost sample from the contractor sample
-child.mainsample  <- child.sframe %>%
+shes.childboost.mainsample  <- child.sframe %>%
   css_sampling(stratum = "la_code",
            sample_size = child.samplesize$child_n,
            prob = rep(1/nrow(child.sframe), 
                       times = nrow(child.sframe)),
            control = shes.control)
 
-nrow(child.mainsample)
+nrow(shes.childboost.mainsample)
 
-### 9 - Contractor sample ---- 
+### 9 - Draw child reserve sample ----
+
+# Add message to inform user about progress
+message(normal("Draw child reserve sample"))
+
+# Split the sample into child sample frame and islands. 
+# The islands do not have a child boost and therefore are not 
+# included in the sample frame
+child.sframe_reserve <- shes.reservesample %>% filter(!la_code %in% c(235, 330, 360))
+
+# get sample size for child boost reserve (exclude islands)
+child.samplesize_reserve <- shes.samplesize %>% filter(!shes_strata %in% c(235, 330, 360)) %>%
+  select(reserve_child_n)
+
+# Select the child boost sample from the contractor sample
+shes.childboost.reservesample  <- child.sframe_reserve %>%
+  css_sampling(stratum = "la_code",
+               sample_size = child.samplesize$reserve_child_n,
+               prob = rep(1/nrow(child.sframe), 
+                          times = nrow(child.sframe)),
+               control = shes.control)
+
+nrow(shes.childboost.reservesample)
+
+### 10 - Get main reserve sample ----
+
+shes.main.reservesample <- shes.reservesample %>%
+  anti_join(child.reservesample)
+
+nrow(shes.main.reservesample)
+
+### 11 - Contractor sample ---- 
 
 # Add message to inform user about progress
 message(normal("Combine samples"))
@@ -269,14 +300,14 @@ shes.full.contractorsample %>%
   adorn_totals("row") %>%
   adorn_totals("col")
 
-### 10 - Prepare for export ----
+### 12 - Prepare for export ----
 
 # Add message to inform user about progress
 message(normal("Prepare for export"))
 
 shes.contractorsample.export <- css_prepare_for_export(shes.full.contractorsample)
 
-### 11 - Export sample  ----
+### 13 - Export sample  ----
 
 # Add message to inform user about progress
 message(normal("Export sample"))
@@ -295,7 +326,11 @@ css_export_rds(shes.biomod.frameandmatchedsample)
 
 css_export_rds(shes.full.contractorsample)
 
-css_export_rds(shes.reservesample)
+css_export_rds(shes.main.reservesample)
+
+css_export_rds(shes.childboost.reservesample)
+
+css_export_rds(shes.childboost.mainsample)
 
 # total contractor sample
 write.csv(shes.contractorsample.export, 
@@ -313,6 +348,16 @@ write.csv(shes.contractorsample.export %>% filter(child_boost == 1),
                  Sys.Date(),
                  "_",
                  "childboost_ shes.contractorsample.",
+                 config$syear,
+                 ".csv"),
+          row.names = FALSE)
+
+# export child boost reserve sample separately (to be sent to PHS)
+write.csv(shes.child.reservesample, 
+          paste0(shes.path,
+                 Sys.Date(),
+                 "_",
+                 "childboost_ shes.reservesample.",
                  config$syear,
                  ".csv"),
           row.names = FALSE)

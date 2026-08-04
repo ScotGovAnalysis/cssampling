@@ -58,7 +58,8 @@ rawpaf <-  read_csv(config$infilenm.path,
                     show_col_types = FALSE) %>%
   css_clean_names_modified() %>%
   mutate(datazone = substr(x2011datazone, 1, 9),
-         udprn = as.numeric(udprn))
+         udprn = as.numeric(udprn)) %>%
+  rename(dz22 = x2022datazone)
 
 # Import datazone information and add indicator for SHeS year
 dz_info <- haven::read_sas(config$dz.path) %>%
@@ -80,7 +81,7 @@ la_lookup <- read.csv("la_lookup.csv")
 # Import island region codes
 island_codes <- readxl::read_xlsx(config$island.path) %>%
   css_clean_names_modified() %>%
-  rename('x2022datazone' = dz22_code)
+  rename(dz22 = dz22_code)
 
 ### 2 - Postcode address file (PAF) ----
 
@@ -293,8 +294,8 @@ final_paf_check <- final_paf %>% group_by(la) %>% count()
 
 # Add island region code
 final_paf <- final_paf %>%
-  left_join(island_codes %>% select(x2022datazone, sir_code),
-            by = join_by(x2022datazone))
+  left_join(island_codes %>% select(dz22, sir_code),
+            by = join_by(dz22))
 
 ### 8 - Export final PAF  ----
 

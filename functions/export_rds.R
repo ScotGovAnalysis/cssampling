@@ -30,7 +30,7 @@ css_export_rds <- function(object) {
          ".rds"),
   compress = "gz")
   
-  write.csv(
+  fwrite(
     object, 
     paste0(path,
            Sys.Date(),

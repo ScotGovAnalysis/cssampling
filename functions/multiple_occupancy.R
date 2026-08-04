@@ -86,7 +86,7 @@ css_multiple_occupancy <- function(sample_frame) {
       "ycoord",
       "datazone",
       "dz11",
-      "x2022datazone",
+      "dz22",
       "sir_code",
       "la",
       "laa",

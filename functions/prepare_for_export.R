@@ -22,7 +22,7 @@ css_prepare_for_export <- function(df){
     # select relevant variables
     select(any_of(c("uprn",
       "udprn", "organisation", "property", "street"," locality", 
-      "town", "postcode", "print_address", "datazone", "dz11", "x2022datazone",
+      "town", "postcode", "print_address", "datazone", "dz11", "dz22",
       "sir_code", "xcoord", "ycoord", "health_board", "hb_code", "la", 
       "la_code", "cluster21", "multisize", "simd20rank", "dz11_urbrur2020", 
       "council_tax_band",
