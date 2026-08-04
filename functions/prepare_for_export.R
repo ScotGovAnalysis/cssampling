@@ -23,7 +23,7 @@ css_prepare_for_export <- function(df){
     select(any_of(c("uprn",
       "udprn", "organisation", "property", "street"," locality", 
       "town", "postcode", "print_address", "datazone", "dz11", "x2022datazone",
-      "xcoord", "ycoord", "health_board", "hb_code", "la", 
+      "sir_code", "xcoord", "ycoord", "health_board", "hb_code", "la", 
       "la_code", "cluster21", "multisize", "simd20rank", "dz11_urbrur2020", 
       "council_tax_band",
       "houseconditionflag", "sample_type", "core", "core_bio", "child_boost",

@@ -47,7 +47,7 @@ config$infilenm.path <- "PAF_PATH"
 # This file is updated twice a year by NRS.
 # The most recent version should be used.
 # Data can be accessed via the following link:
-# https://www.nrscotland.gov.uk/statistics-and-data/geography/nrs-postcode-extract
+# https://www.nrscotland.gov.uk/search/?query=postcode+directory
 config$pcd.path <- "OLD_PAF_PATH"
 
 # File path of SIMD rank information for each datazone
@@ -66,6 +66,9 @@ config$dz.path <- "DATAZONE_PATH"
 # Data can be accessed here:
 # https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/households/household-estimates/small-area-statistics-on-households-and-dwellings
 config$hh_dz.path <- "HH_ESTIMATES_PATH"
+
+# File path of island region codes (using 2022 datazones)
+config$island.path <- paste0("ISLAND_CODE_PATH")
 
 ### 3a - File names SCJS - TO UPDATE ----
 

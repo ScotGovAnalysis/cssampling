@@ -20,6 +20,7 @@ library(openxlsx)
 library(readxl)
 library(rlang)
 library(crayon)
+library(data.table)
 
 ### 2 - Load functions from functions folder of Rproject ----
 

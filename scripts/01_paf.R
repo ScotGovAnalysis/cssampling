@@ -77,6 +77,11 @@ shes.strata <- read.csv(config$shes.strata.path,
 # Import la lookup file
 la_lookup <- read.csv("la_lookup.csv")
 
+# Import island region codes
+island_codes <- readxl::read_xlsx(config$island.path) %>%
+  css_clean_names_modified() %>%
+  rename('x2022datazone' = dz22_code)
+
 ### 2 - Postcode address file (PAF) ----
 
 # Add message to inform user about progress
@@ -284,7 +289,14 @@ final_paf_check <- final_paf %>% group_by(la) %>% count()
     {stop("At least one local authority has fewer than 1,000 addresses")}
 }
 
-### 7 - Export final PAF  ----
+### 7 - Add island codes ----
+
+# Add island region code
+final_paf <- final_paf %>%
+  left_join(island_codes %>% select(x2022datazone, sir_code),
+            by = join_by(x2022datazone))
+
+### 8 - Export final PAF  ----
 
 # Add message to inform user about progress
 message(normal("Export final PAF"))
@@ -294,6 +306,11 @@ write_rds(
   final_paf,
   here("lookups", paste0(paf_v, "_final_paf.rds")),
   compress = "gz"
+)
+
+data.table::fwrite(
+  final_paf,
+  here("lookups", paste0(paf_v, "_final_paf.csv"))
 )
 
 ### END OF SCRIPT ####

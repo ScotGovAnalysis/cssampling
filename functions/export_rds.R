@@ -29,4 +29,14 @@ css_export_rds <- function(object) {
          config$syear,
          ".rds"),
   compress = "gz")
+  
+  write.csv(
+    object, 
+    paste0(path,
+           Sys.Date(),
+           "_",
+           substitute(object),
+           ".",
+           config$syear,
+           ".csv"))
 } 

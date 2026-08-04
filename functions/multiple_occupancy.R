@@ -87,6 +87,7 @@ css_multiple_occupancy <- function(sample_frame) {
       "datazone",
       "dz11",
       "x2022datazone",
+      "sir_code",
       "la",
       "laa",
       "activeflag",
