@@ -239,7 +239,7 @@ nrow(shes.childboost.reservesample)
 ### 10 - Get main reserve sample ----
 
 shes.main.reservesample <- shes.reservesample %>%
-  anti_join(child.reservesample)
+  anti_join(shes.childboost.reservesample)
 
 nrow(shes.main.reservesample)
 
@@ -251,7 +251,7 @@ message(normal("Combine samples"))
 # Recombine drawn sample with the islands sample and add the child_boost, 
 # main and adult_boost flags
 
-shes.full.contractorsample <- child.mainsample %>%
+shes.full.contractorsample <- shes.childboost.mainsample %>%
   
   # add child_boost flag
   mutate(child_boost = 1,
@@ -337,40 +337,53 @@ write.csv(shes.contractorsample.export,
           paste0(shes.path,
                  Sys.Date(),
                  "_",
-                 "shes.contractorsample.",
+                 "SHeSContractorSample",
                  config$syear,
+                 " (core, core bio and UNLINKED child boost)",
                  ".csv"),
           row.names = FALSE)
 
-# export child boost sample separately (to be sent to PHS)
-write.csv(shes.contractorsample.export %>% filter(child_boost == 1), 
-          paste0(shes.path,
-                 Sys.Date(),
-                 "_",
-                 "childboost_ shes.contractorsample.",
-                 config$syear,
-                 ".csv"),
-          row.names = FALSE)
-
-# export child boost reserve sample separately (to be sent to PHS)
-write.csv(shes.child.reservesample, 
-          paste0(shes.path,
-                 Sys.Date(),
-                 "_",
-                 "childboost_ shes.reservesample.",
-                 config$syear,
-                 ".csv"),
-          row.names = FALSE)
-
-# export core sample separately (to be sent to contractor)
+# total contractor sample (excluding child boost)
 write.csv(shes.contractorsample.export %>% filter(child_boost != 1), 
           paste0(shes.path,
                  Sys.Date(),
                  "_",
-                 "core_shes.contractorsample.",
+                 "SHeSContractorSample",
                  config$syear,
+                 " (core and core bio)",
                  ".csv"),
           row.names = FALSE)
+
+# export main child boost sample
+# This file is to be sent to PHS
+write.csv(shes.childboost.mainsample %>% 
+            select(uprn, udprn, organisation, property, street, 
+                   town, postcode, print_address, hb_code, la, 
+                   la_code, multisize), 
+          paste0(shes.path,
+                 Sys.Date(),
+                 "_",
+                 "SHeS ",
+                 config$syear,
+                 " Main Child Boost for CHI linkage",
+                 ".csv"),
+          row.names = FALSE)
+
+# export reserve child boost sample
+# This file is to be sent to PHS
+write.csv(shes.childboost.reservesample %>% 
+            select(uprn, udprn, organisation, property, street, 
+                   town, postcode, print_address, hb_code, la, 
+                   la_code, multisize), 
+          paste0(shes.path,
+                 Sys.Date(),
+                 "_",
+                 "SHeS ",
+                 config$syear,
+                 " Reserve Child Boost for CHI linkage",
+                 ".csv"),
+          row.names = FALSE)
+
 
 ### END OF SCRIPT ####
 
