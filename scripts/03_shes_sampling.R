@@ -51,7 +51,7 @@ usedaddresses <- read_rds(paste0(here("lookups"), "/", recent_usedaddresses))
 recent_paf <- css_most_recent_file(path = here("lookups"), pattern = "paf")
 
 # Import cleaned PAF
-clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
+clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf[grepl("\\.rds$", recent_paf)])))
 
 # Import SIMD ranks for datazones
 dz11_simd20 <- haven::read_sas(config$dz_simd.path) %>%

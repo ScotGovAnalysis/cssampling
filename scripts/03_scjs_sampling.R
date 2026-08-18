@@ -51,7 +51,7 @@ recent_paf <- paf_list[grepl(paf_v, paf_list,
                               ignore.case = TRUE)]
 
 # Import cleaned PAF
-clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf)))
+clean_paf <- read_rds(paste0(here("lookups", "/", recent_paf[grepl("\\.rds$", recent_paf)])))
 
 # Import sample size file
 scjs.samplesize <- read.csv(config$scjs.samplesize.path, 
