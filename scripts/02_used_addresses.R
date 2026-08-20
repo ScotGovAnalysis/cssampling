@@ -58,7 +58,9 @@ if("previous.rap.samples.path" %in% names(config) == TRUE){
                                pattern = capture.output(cat(config$previous.rap.samples.path, sep = "|")),
                                full.names = TRUE,
                                recursive = TRUE,
-                               ignore.case = TRUE)
+                               ignore.case = TRUE) %>%
+    .[grepl("\\.rds$", .)]
+    
   
   prev.rap.samples.data <- seq_along(files_prev_rap) %>%
     purrr::map(\(x) transform(readRDS(files_prev_rap[x])) %>%
