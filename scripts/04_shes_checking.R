@@ -55,7 +55,7 @@ shes.biomod.frameandmatchedsample <- read_rds(paste0(shes.path, "/",
                                                 recent_biomod.frameandmatchedsample))
 
 # Identify most recent contractor sample
-sample_fname <- paste0("_shes.contractorsample.",
+sample_fname <- paste0("_shes.full.contractorsample.",
             config$syear,
             ".csv")
 recent.contractor.sample <- css_most_recent_file(path = shes.path, 
